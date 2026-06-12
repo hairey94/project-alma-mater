@@ -1,0 +1,1762 @@
+[gd_scene format=3 uid="uid://d1dxi4r4neph0"]
+
+[ext_resource type="Script" uid="uid://c4yoca0e70ych" path="res://src/scripts/in_game_hud.gd" id="1_kns2s"]
+[ext_resource type="Texture2D" uid="uid://csso2wd4nvmn4" path="res://assets/ui/hud_icons_sheet.svg" id="2_5dkrs"]
+[ext_resource type="Texture2D" uid="uid://creccoexnfhhg" path="res://assets/ui/services_spritesheet.svg" id="2_ga6wn"]
+[ext_resource type="Texture2D" uid="uid://huyxflnnu4yb" path="res://assets/bulldozer_border.png" id="2_j3dkl"]
+[ext_resource type="FontFile" uid="uid://dn2i6jb3t1mek" path="res://assets/fonts/Overpass/static/Overpass-Bold.ttf" id="3_b05f2"]
+[ext_resource type="Texture2D" uid="uid://dfot1d1gnrn5c" path="res://assets/ui/mode_spritesheet.svg" id="3_lswrh"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_j6rej"]
+bg_color = Color(0, 0, 0, 0)
+border_width_left = 8
+border_width_top = 8
+border_width_right = 8
+border_width_bottom = 8
+border_color = Color(0.9843137, 0.7490196, 0.14117648, 1)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_omt7d"]
+texture = ExtResource("2_j3dkl")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3utcp"]
+content_margin_left = 10.0
+content_margin_top = 10.0
+content_margin_right = 10.0
+content_margin_bottom = 10.0
+bg_color = Color(0.08235294, 0.16470589, 0.2, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_23aof"]
+content_margin_left = 10.0
+content_margin_top = 10.0
+content_margin_right = 10.0
+content_margin_bottom = 10.0
+bg_color = Color(0.69411767, 0.8980392, 0.9607843, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_l1hde"]
+content_margin_left = 10.0
+content_margin_top = 10.0
+content_margin_right = 10.0
+content_margin_bottom = 10.0
+bg_color = Color(0.69411767, 0.8980392, 0.9607843, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_ufeh1"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1nt3d"]
+atlas = ExtResource("3_lswrh")
+region = Rect2(0, 0, 64, 64)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7volg"]
+content_margin_left = 10.0
+content_margin_top = 10.0
+content_margin_right = 10.0
+content_margin_bottom = 10.0
+bg_color = Color(0.08235294, 0.16470589, 0.2, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4640w"]
+content_margin_left = 10.0
+content_margin_top = 10.0
+content_margin_right = 10.0
+content_margin_bottom = 10.0
+bg_color = Color(0.69411767, 0.8980392, 0.9607843, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_trwm2"]
+content_margin_left = 10.0
+content_margin_top = 10.0
+content_margin_right = 10.0
+content_margin_bottom = 10.0
+bg_color = Color(0.69411767, 0.8980392, 0.9607843, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gnblm"]
+atlas = ExtResource("3_lswrh")
+region = Rect2(64, 0, 64, 64)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_h5rya"]
+content_margin_left = 10.0
+content_margin_top = 10.0
+content_margin_right = 10.0
+content_margin_bottom = 10.0
+bg_color = Color(0.08235294, 0.16470589, 0.2, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_enak5"]
+content_margin_left = 10.0
+content_margin_top = 10.0
+content_margin_right = 10.0
+content_margin_bottom = 10.0
+bg_color = Color(0.69411767, 0.8980392, 0.9607843, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0j54o"]
+content_margin_left = 10.0
+content_margin_top = 10.0
+content_margin_right = 10.0
+content_margin_bottom = 10.0
+bg_color = Color(0.69411767, 0.8980392, 0.9607843, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fut4f"]
+atlas = ExtResource("3_lswrh")
+region = Rect2(128, 0, 64, 64)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ggoye"]
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+bg_color = Color(0.0767, 0.10335, 0.13, 0.78431374)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qu1va"]
+content_margin_left = 15.0
+content_margin_top = 5.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+bg_color = Color(0.078431375, 0.105882354, 0.13333334, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cnjgr"]
+content_margin_left = 5.0
+content_margin_top = 1.0
+content_margin_right = 5.0
+content_margin_bottom = 1.0
+bg_color = Color(0.23529412, 0.4627451, 0.827451, 1)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ved12"]
+atlas = ExtResource("2_5dkrs")
+region = Rect2(64, 0, 64, 64)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tr3hu"]
+bg_color = Color(0.2, 0.25490198, 0.33333334, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1cofj"]
+atlas = ExtResource("2_ga6wn")
+region = Rect2(0, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_t04va"]
+atlas = ExtResource("2_ga6wn")
+region = Rect2(64, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_flgxw"]
+atlas = ExtResource("2_ga6wn")
+region = Rect2(128, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_78spj"]
+atlas = ExtResource("2_ga6wn")
+region = Rect2(192, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_b05f2"]
+atlas = ExtResource("2_5dkrs")
+region = Rect2(16, 0, 32, 64)
+
+[sub_resource type="Theme" id="Theme_5dkrs"]
+ProgressBar/font_sizes/font_size = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_b05f2"]
+bg_color = Color(0.34117648, 0.34117648, 0.3372549, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ga6wn"]
+bg_color = Color(0.21960784, 0.7411765, 0.972549, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_527nk"]
+bg_color = Color(0.34117648, 0.34117648, 0.3372549, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_igvit"]
+bg_color = Color(0.8627451, 0.5058824, 0.28235295, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_h6mq2"]
+bg_color = Color(0.34117648, 0.34117648, 0.3372549, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_uif4p"]
+bg_color = Color(0.90588236, 0.2901961, 0.2509804, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jwwqv"]
+bg_color = Color(0.34117648, 0.34117648, 0.3372549, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0apt7"]
+bg_color = Color(0.13333334, 0.77254903, 0.36862746, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_64et0"]
+content_margin_left = 10.0
+content_margin_top = 5.0
+content_margin_right = 15.0
+content_margin_bottom = 1.0
+bg_color = Color(0.05882353, 0.09019608, 0.16470589, 1)
+corner_radius_top_left = 100
+corner_radius_top_right = 100
+corner_radius_bottom_right = 100
+corner_radius_bottom_left = 100
+corner_detail = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xi5y0"]
+content_margin_left = 20.0
+content_margin_top = 10.0
+content_margin_right = 40.0
+content_margin_bottom = 10.0
+bg_color = Color(0.05882353, 0.09019608, 0.16470589, 1)
+border_blend = true
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wluyw"]
+bg_color = Color(0.9882353, 0.7882353, 0, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ln5ve"]
+bg_color = Color(0.08235294, 0.16470589, 0.2, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tywln"]
+bg_color = Color(0.69411767, 0.8980392, 0.9607843, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2kqio"]
+bg_color = Color(0.69411767, 0.8980392, 0.9607843, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ga6wn"]
+atlas = ExtResource("2_5dkrs")
+region = Rect2(64, 0, 64, 64)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lswrh"]
+bg_color = Color(0.08235294, 0.16470589, 0.2, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_l03bq"]
+bg_color = Color(0.69411767, 0.8980392, 0.9607843, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_j3dkl"]
+bg_color = Color(0.69411767, 0.8980392, 0.9607843, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_527nk"]
+atlas = ExtResource("2_5dkrs")
+region = Rect2(128, 0, 64, 64)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_o7mi6"]
+bg_color = Color(0.08235294, 0.16470589, 0.2, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_j3ghn"]
+bg_color = Color(0.69411767, 0.8980392, 0.9607843, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5l7ml"]
+bg_color = Color(0.69411767, 0.8980392, 0.9607843, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_igvit"]
+atlas = ExtResource("2_5dkrs")
+region = Rect2(192, 0, 64, 64)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kyr88"]
+bg_color = Color(0.08235294, 0.16470589, 0.2, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_624o2"]
+bg_color = Color(0.69411767, 0.8980392, 0.9607843, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1pbwk"]
+bg_color = Color(0.69411767, 0.8980392, 0.9607843, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_h6mq2"]
+atlas = ExtResource("2_5dkrs")
+region = Rect2(256, 0, 64, 64)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_llxqw"]
+bg_color = Color(0.08235294, 0.16470589, 0.2, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kyo0y"]
+bg_color = Color(0.69411767, 0.8980392, 0.9607843, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_i6uyg"]
+bg_color = Color(0.69411767, 0.8980392, 0.9607843, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_uif4p"]
+atlas = ExtResource("2_5dkrs")
+region = Rect2(320, 0, 64, 64)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ubemu"]
+bg_color = Color(0.08235294, 0.16470589, 0.2, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sh11y"]
+bg_color = Color(0.69411767, 0.8980392, 0.9607843, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xbtx3"]
+bg_color = Color(0.69411767, 0.8980392, 0.9607843, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jwwqv"]
+atlas = ExtResource("2_5dkrs")
+region = Rect2(384, 0, 64, 64)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pxg5s"]
+bg_color = Color(0.08235294, 0.16470589, 0.2, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_naq88"]
+bg_color = Color(0.69411767, 0.8980392, 0.9607843, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5i5a3"]
+bg_color = Color(0.69411767, 0.8980392, 0.9607843, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0apt7"]
+atlas = ExtResource("2_5dkrs")
+region = Rect2(0, 64, 64, 64)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rmq6i"]
+bg_color = Color(0.08235294, 0.16470589, 0.2, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_l5hp2"]
+bg_color = Color(0.69411767, 0.8980392, 0.9607843, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qg06s"]
+bg_color = Color(0.69411767, 0.8980392, 0.9607843, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_64et0"]
+atlas = ExtResource("2_5dkrs")
+region = Rect2(64, 64, 64, 64)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7qoq0"]
+bg_color = Color(0.08235294, 0.16470589, 0.2, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fd07o"]
+bg_color = Color(0.69411767, 0.8980392, 0.9607843, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lcds7"]
+bg_color = Color(0.69411767, 0.8980392, 0.9607843, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xi5y0"]
+atlas = ExtResource("2_5dkrs")
+region = Rect2(128, 64, 64, 64)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tcawx"]
+bg_color = Color(0.08235294, 0.16470589, 0.2, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sdm52"]
+bg_color = Color(0.69411767, 0.8980392, 0.9607843, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jg3sf"]
+bg_color = Color(0.69411767, 0.8980392, 0.9607843, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_nubei"]
+atlas = ExtResource("2_5dkrs")
+region = Rect2(192, 64, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_03xox"]
+atlas = ExtResource("2_5dkrs")
+region = Rect2(256, 64, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_v7vpr"]
+atlas = ExtResource("2_5dkrs")
+region = Rect2(320, 64, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_d0w2y"]
+atlas = ExtResource("2_5dkrs")
+region = Rect2(384, 64, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_e4hct"]
+atlas = ExtResource("2_5dkrs")
+region = Rect2(0, 128, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_woodm"]
+atlas = ExtResource("2_5dkrs")
+region = Rect2(64, 128, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_q1vpc"]
+atlas = ExtResource("2_5dkrs")
+region = Rect2(128, 128, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tr3hu"]
+atlas = ExtResource("2_5dkrs")
+region = Rect2(320, 128, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wluyw"]
+atlas = ExtResource("2_5dkrs")
+region = Rect2(192, 128, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ggoye"]
+atlas = ExtResource("2_5dkrs")
+region = Rect2(256, 128, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ln5ve"]
+atlas = ExtResource("2_5dkrs")
+region = Rect2(384, 128, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_j3ghn"]
+atlas = ExtResource("2_5dkrs")
+region = Rect2(192, 192, 64, 64)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1cjhu"]
+bg_color = Color(0.08235294, 0.16470589, 0.2, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jcja2"]
+bg_color = Color(0.69411767, 0.8980392, 0.9607843, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1eag4"]
+bg_color = Color(0.69411767, 0.8980392, 0.9607843, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_kyr88"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2kqio"]
+atlas = ExtResource("2_5dkrs")
+region = Rect2(64, 192, 64, 64)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2h223"]
+bg_color = Color(0.08235294, 0.16470589, 0.2, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pqg26"]
+bg_color = Color(0.69411767, 0.8980392, 0.9607843, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_e72uf"]
+bg_color = Color(0.69411767, 0.8980392, 0.9607843, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_o7mi6"]
+atlas = ExtResource("2_5dkrs")
+region = Rect2(128, 192, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tywln"]
+atlas = ExtResource("2_5dkrs")
+region = Rect2(0, 192, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5l7ml"]
+atlas = ExtResource("2_5dkrs")
+region = Rect2(256, 192, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cnjgr"]
+atlas = ExtResource("2_5dkrs")
+region = Rect2(384, 192, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qu1va"]
+atlas = ExtResource("2_5dkrs")
+region = Rect2(0, 256, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5dkrs"]
+atlas = ExtResource("2_5dkrs")
+region = Rect2(64, 256, 64, 64)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_q1vpc"]
+content_margin_left = 5.0
+content_margin_top = 5.0
+content_margin_right = 5.0
+content_margin_bottom = 5.0
+bg_color = Color(0.05882353, 0.09019608, 0.16470589, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_speed_normal"]
+bg_color = Color(0.08235294, 0.16470589, 0.2, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_speed_hover"]
+bg_color = Color(0.2, 0.3, 0.4, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_speed_pressed"]
+bg_color = Color(0.69411767, 0.8980392, 0.9607843, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_speed_hover_pressed"]
+bg_color = Color(0.69411767, 0.8980392, 0.9607843, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_e4hct"]
+content_margin_left = 5.0
+content_margin_top = 5.0
+content_margin_right = 10.0
+content_margin_bottom = 5.0
+bg_color = Color(0.05882353, 0.09019608, 0.16470589, 1)
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_woodm"]
+content_margin_left = 5.0
+content_margin_top = 0.0
+content_margin_right = 10.0
+content_margin_bottom = 5.0
+bg_color = Color(0.6, 0.6, 0.6, 0)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_k4h5g"]
+atlas = ExtResource("2_5dkrs")
+region = Rect2(320, 256, 64, 64)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_03xox"]
+content_margin_left = 10.0
+content_margin_top = 5.0
+content_margin_right = 10.0
+content_margin_bottom = 5.0
+bg_color = Color(0.05882353, 0.09019608, 0.16470589, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_f683u"]
+atlas = ExtResource("2_5dkrs")
+region = Rect2(384, 256, 64, 64)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_v7vpr"]
+content_margin_left = 10.0
+content_margin_top = 5.0
+content_margin_right = 10.0
+content_margin_bottom = 5.0
+bg_color = Color(0.05882353, 0.09019608, 0.16470589, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_satfp"]
+atlas = ExtResource("2_5dkrs")
+region = Rect2(0, 320, 64, 64)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_d0w2y"]
+content_margin_left = 10.0
+content_margin_top = 5.0
+content_margin_right = 10.0
+content_margin_bottom = 5.0
+bg_color = Color(0.05882353, 0.09019608, 0.16470589, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_h4ima"]
+atlas = ExtResource("2_5dkrs")
+region = Rect2(64, 320, 64, 64)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_nubei"]
+content_margin_left = 10.0
+content_margin_top = 5.0
+content_margin_right = 10.0
+content_margin_bottom = 5.0
+bg_color = Color(0.05882353, 0.09019608, 0.16470589, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xxnc1"]
+atlas = ExtResource("2_5dkrs")
+region = Rect2(128, 320, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_x6euy"]
+atlas = ExtResource("2_5dkrs")
+region = Rect2(192, 320, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8kl0o"]
+atlas = ExtResource("2_5dkrs")
+region = Rect2(256, 320, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4dfjt"]
+atlas = ExtResource("2_5dkrs")
+region = Rect2(320, 320, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wyhgc"]
+atlas = ExtResource("2_5dkrs")
+region = Rect2(384, 320, 64, 64)
+
+[node name="InGameHUD" type="CanvasLayer" unique_id=1970903453]
+script = ExtResource("1_kns2s")
+
+[node name="ArchitecturalBorder" type="Panel" parent="." unique_id=944886038]
+unique_name_in_owner = true
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_j6rej")
+
+[node name="BulldozerBorder" type="Panel" parent="." unique_id=353662678]
+unique_name_in_owner = true
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_omt7d")
+
+[node name="ModeControlToolbar" type="VBoxContainer" parent="." unique_id=1497055874]
+offset_left = 20.0
+offset_top = 20.0
+offset_right = 60.0
+offset_bottom = 115.0
+
+[node name="Buttons" type="HBoxContainer" parent="ModeControlToolbar"]
+layout_mode = 2
+
+[node name="GameModeBtn" type="Button" parent="ModeControlToolbar/Buttons" unique_id=1327385262]
+unique_name_in_owner = true
+layout_mode = 2
+tooltip_text = "Game Mode"
+theme_override_styles/normal = SubResource("StyleBoxFlat_3utcp")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_23aof")
+theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_l1hde")
+toggle_mode = true
+button_pressed = true
+button_group = SubResource("ButtonGroup_ufeh1")
+icon = SubResource("AtlasTexture_1nt3d")
+
+[node name="ArchModeBtn" type="Button" parent="ModeControlToolbar/Buttons" unique_id=1849234871]
+unique_name_in_owner = true
+layout_mode = 2
+tooltip_text = "Architectural Mode"
+theme_override_styles/normal = SubResource("StyleBoxFlat_7volg")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_4640w")
+theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_trwm2")
+toggle_mode = true
+button_group = SubResource("ButtonGroup_ufeh1")
+icon = SubResource("AtlasTexture_gnblm")
+
+[node name="ManagementModeBtn" type="Button" parent="ModeControlToolbar/Buttons" unique_id=853475805]
+unique_name_in_owner = true
+layout_mode = 2
+tooltip_text = "Management Mode"
+theme_override_styles/normal = SubResource("StyleBoxFlat_h5rya")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_enak5")
+theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_0j54o")
+toggle_mode = true
+button_group = SubResource("ButtonGroup_ufeh1")
+icon = SubResource("AtlasTexture_fut4f")
+
+[node name="Indicators" type="HBoxContainer" parent="ModeControlToolbar"]
+layout_mode = 2
+alignment = 1
+
+[node name="SpeedIndicatorLabel" type="Label" parent="ModeControlToolbar/Indicators"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 24
+theme_override_colors/font_color = Color(0.961, 0.694, 0.349, 1)
+theme_override_styles/normal = SubResource("StyleBoxFlat_3utcp")
+theme_override_constants/margin_top = 2
+theme_override_constants/margin_bottom = 2
+
+[node name="FloorIndicatorLabel" type="Label" parent="ModeControlToolbar/Indicators"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 24
+theme_override_colors/font_color = Color(0.694, 0.898, 0.961, 1)
+theme_override_styles/normal = SubResource("StyleBoxFlat_3utcp")
+theme_override_constants/margin_top = 2
+theme_override_constants/margin_bottom = 2
+
+[node name="DrawerPanel" type="PanelContainer" parent="." unique_id=1547875829]
+unique_name_in_owner = true
+z_index = 2
+custom_minimum_size = Vector2(312, 250)
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -1500.0
+offset_top = -1694.0
+offset_right = -1188.0
+offset_bottom = -1444.0
+grow_horizontal = 2
+grow_vertical = 0
+pivot_offset = Vector2(280, 70)
+mouse_filter = 1
+theme_override_styles/panel = SubResource("StyleBoxFlat_ggoye")
+
+[node name="DrawerContentPacker" type="MarginContainer" parent="DrawerPanel" unique_id=839803244]
+layout_mode = 2
+
+[node name="DrawerVerticalLayout" type="VBoxContainer" parent="DrawerPanel/DrawerContentPacker" unique_id=1019562842]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="PanelContainer" type="PanelContainer" parent="DrawerPanel/DrawerContentPacker/DrawerVerticalLayout" unique_id=1757059609]
+layout_mode = 2
+mouse_filter = 1
+theme_override_styles/panel = SubResource("StyleBoxFlat_qu1va")
+
+[node name="DrawerSubTabBar" type="TabBar" parent="DrawerPanel/DrawerContentPacker/DrawerVerticalLayout/PanelContainer" unique_id=208146900]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+theme_override_constants/h_separation = 4
+theme_override_constants/tab_separation = 4
+theme_override_constants/icon_max_width = 40
+theme_override_styles/tab_selected = SubResource("StyleBoxFlat_cnjgr")
+current_tab = 0
+clip_tabs = false
+close_with_middle_mouse = false
+scrolling_enabled = false
+switch_on_drag_hover = false
+tab_count = 1
+tab_0/tooltip = "Services"
+tab_0/icon = SubResource("AtlasTexture_ved12")
+
+[node name="MarginContainer" type="MarginContainer" parent="DrawerPanel/DrawerContentPacker/DrawerVerticalLayout" unique_id=1696471078]
+custom_minimum_size = Vector2(0, 128)
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 0
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_right = 10
+
+[node name="ScrollContainer" type="ScrollContainer" parent="DrawerPanel/DrawerContentPacker/DrawerVerticalLayout/MarginContainer" unique_id=1164206206]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_filter = 0
+follow_focus = true
+horizontal_scroll_mode = 0
+
+[node name="ServicesGrid" type="GridContainer" parent="DrawerPanel/DrawerContentPacker/DrawerVerticalLayout/MarginContainer/ScrollContainer" unique_id=1194078360]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(256, 128)
+layout_mode = 2
+size_flags_vertical = 0
+theme_override_constants/h_separation = 12
+theme_override_constants/v_separation = 16
+columns = 4
+
+[node name="WaterTankBtn" type="Button" parent="DrawerPanel/DrawerContentPacker/DrawerVerticalLayout/MarginContainer/ScrollContainer/ServicesGrid" unique_id=1267997950]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+tooltip_text = "Water Tower Tank
+7500 L/day"
+theme_override_styles/normal = SubResource("StyleBoxFlat_tr3hu")
+icon = SubResource("AtlasTexture_1cofj")
+icon_alignment = 1
+expand_icon = true
+
+[node name="SewagePlantBtn" type="Button" parent="DrawerPanel/DrawerContentPacker/DrawerVerticalLayout/MarginContainer/ScrollContainer/ServicesGrid" unique_id=1468617076]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+tooltip_text = "Sewage Treatment Plant
+30 PE"
+theme_override_styles/normal = SubResource("StyleBoxFlat_tr3hu")
+icon = SubResource("AtlasTexture_t04va")
+icon_alignment = 1
+expand_icon = true
+
+[node name="ElectricSubstationBtn" type="Button" parent="DrawerPanel/DrawerContentPacker/DrawerVerticalLayout/MarginContainer/ScrollContainer/ServicesGrid" unique_id=446102803]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+tooltip_text = "Electrical Substation
+300kW"
+theme_override_styles/normal = SubResource("StyleBoxFlat_tr3hu")
+icon = SubResource("AtlasTexture_flgxw")
+icon_alignment = 1
+expand_icon = true
+
+[node name="TelecomTowerBtn" type="Button" parent="DrawerPanel/DrawerContentPacker/DrawerVerticalLayout/MarginContainer/ScrollContainer/ServicesGrid" unique_id=1409945838]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+tooltip_text = "Telecommunication Tower
+Download Speed 10Mbps"
+theme_override_styles/normal = SubResource("StyleBoxFlat_tr3hu")
+icon = SubResource("AtlasTexture_78spj")
+icon_alignment = 1
+expand_icon = true
+
+[node name="CloseDrawerBtn" type="Button" parent="DrawerPanel" unique_id=980882614]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 0
+tooltip_text = "Close"
+theme_override_colors/font_color = Color(0.88, 0.88, 0.88, 0.5882353)
+theme_override_constants/h_separation = 1
+theme_override_font_sizes/font_size = 12
+text = "X"
+
+[node name="MainHUDPanel" type="PanelContainer" parent="." unique_id=356023809]
+custom_minimum_size = Vector2(0, 112)
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -112.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="MasterHorizontalSplit" type="HBoxContainer" parent="MainHUDPanel" unique_id=117462490]
+custom_minimum_size = Vector2(0, 112)
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="LeftSideElasticSpacer" type="Control" parent="MainHUDPanel/MasterHorizontalSplit" unique_id=781181835]
+layout_mode = 2
+
+[node name="MergedContainer1" type="HBoxContainer" parent="MainHUDPanel/MasterHorizontalSplit" unique_id=1519720447]
+custom_minimum_size = Vector2(160, 0)
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="DemandIcon" type="TextureRect" parent="MainHUDPanel/MasterHorizontalSplit/MergedContainer1" unique_id=2060779014]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+size_flags_horizontal = 8
+texture = SubResource("AtlasTexture_b05f2")
+expand_mode = 3
+stretch_mode = 5
+
+[node name="DemandBars" type="VBoxContainer" parent="MainHUDPanel/MasterHorizontalSplit/MergedContainer1" unique_id=251445121]
+layout_mode = 2
+size_flags_vertical = 4
+theme = SubResource("Theme_5dkrs")
+theme_override_constants/separation = 10
+
+[node name="WaterBar" type="ProgressBar" parent="MainHUDPanel/MasterHorizontalSplit/MergedContainer1/DemandBars" unique_id=776348018]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(150, 15)
+layout_mode = 2
+tooltip_text = "Water Supply Demand Indicator"
+theme_override_styles/background = SubResource("StyleBoxFlat_b05f2")
+theme_override_styles/fill = SubResource("StyleBoxFlat_ga6wn")
+show_percentage = false
+
+[node name="SewageBar" type="ProgressBar" parent="MainHUDPanel/MasterHorizontalSplit/MergedContainer1/DemandBars" unique_id=1357747517]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(150, 15)
+layout_mode = 2
+tooltip_text = "Sewage Demand Indicator"
+theme_override_styles/background = SubResource("StyleBoxFlat_527nk")
+theme_override_styles/fill = SubResource("StyleBoxFlat_igvit")
+show_percentage = false
+
+[node name="ElectricBar" type="ProgressBar" parent="MainHUDPanel/MasterHorizontalSplit/MergedContainer1/DemandBars" unique_id=1579855892]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(150, 15)
+layout_mode = 2
+tooltip_text = "Electrical Power Demand Indicator"
+theme_override_styles/background = SubResource("StyleBoxFlat_h6mq2")
+theme_override_styles/fill = SubResource("StyleBoxFlat_uif4p")
+show_percentage = false
+
+[node name="InternetBar" type="ProgressBar" parent="MainHUDPanel/MasterHorizontalSplit/MergedContainer1/DemandBars" unique_id=1878416481]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(150, 15)
+layout_mode = 2
+tooltip_text = "Internet Download Speed Demand Indicator"
+theme_override_styles/background = SubResource("StyleBoxFlat_jwwqv")
+theme_override_styles/fill = SubResource("StyleBoxFlat_0apt7")
+show_percentage = false
+
+[node name="TwoRowMatrix" type="VBoxContainer" parent="MainHUDPanel/MasterHorizontalSplit" unique_id=1762907914]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+
+[node name="TopRowToolbar" type="MarginContainer" parent="MainHUDPanel/MasterHorizontalSplit/TwoRowMatrix" unique_id=567989302]
+custom_minimum_size = Vector2(0, 76)
+layout_mode = 2
+
+[node name="TopRowPacker" type="HBoxContainer" parent="MainHUDPanel/MasterHorizontalSplit/TwoRowMatrix/TopRowToolbar" unique_id=35142320]
+layout_mode = 2
+theme_override_constants/separation = 64
+
+[node name="Container2" type="HBoxContainer" parent="MainHUDPanel/MasterHorizontalSplit/TwoRowMatrix/TopRowToolbar/TopRowPacker" unique_id=1011521659]
+custom_minimum_size = Vector2(44, 44)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_constants/separation = 10
+
+[node name="LevelXPBadge" type="TextureRect" parent="MainHUDPanel/MasterHorizontalSplit/TwoRowMatrix/TopRowToolbar/TopRowPacker/Container2" unique_id=1483390502]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+expand_mode = 1
+
+[node name="LevelNumberLabel" type="Label" parent="MainHUDPanel/MasterHorizontalSplit/TwoRowMatrix/TopRowToolbar/TopRowPacker/Container2/LevelXPBadge" unique_id=1636083271]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -11.5
+offset_right = 20.0
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+tooltip_text = "Current Level"
+mouse_filter = 1
+theme_override_fonts/font = ExtResource("3_b05f2")
+theme_override_font_sizes/font_size = 36
+theme_override_styles/normal = SubResource("StyleBoxFlat_64et0")
+text = "1"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="LevelContainer" type="VBoxContainer" parent="MainHUDPanel/MasterHorizontalSplit/TwoRowMatrix/TopRowToolbar/TopRowPacker/Container2" unique_id=948992617]
+layout_mode = 2
+
+[node name="LevelNameLabel" type="Label" parent="MainHUDPanel/MasterHorizontalSplit/TwoRowMatrix/TopRowToolbar/TopRowPacker/Container2/LevelContainer" unique_id=714721262]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_xi5y0")
+text = "Private Tutoring"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="LevelProgress" type="ProgressBar" parent="MainHUDPanel/MasterHorizontalSplit/TwoRowMatrix/TopRowToolbar/TopRowPacker/Container2/LevelContainer" unique_id=573538874]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 5)
+layout_mode = 2
+tooltip_text = "Percent To Next Level"
+theme_override_styles/background = SubResource("StyleBoxFlat_wluyw")
+show_percentage = false
+
+[node name="Container3" type="HBoxContainer" parent="MainHUDPanel/MasterHorizontalSplit/TwoRowMatrix/TopRowToolbar/TopRowPacker" unique_id=751485279]
+custom_minimum_size = Vector2(44, 44)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="ServicesTabBtn" type="Button" parent="MainHUDPanel/MasterHorizontalSplit/TwoRowMatrix/TopRowToolbar/TopRowPacker/Container3" unique_id=2086171591]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(56, 56)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+tooltip_text = "Add Services"
+theme_override_constants/h_separation = 12
+theme_override_styles/normal = SubResource("StyleBoxFlat_ln5ve")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_tywln")
+theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_2kqio")
+toggle_mode = true
+icon = SubResource("AtlasTexture_ga6wn")
+expand_icon = true
+
+[node name="AddBuildingBtn" type="Button" parent="MainHUDPanel/MasterHorizontalSplit/TwoRowMatrix/TopRowToolbar/TopRowPacker/Container3" unique_id=1334716391]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(56, 56)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+tooltip_text = "Add Building"
+theme_override_constants/h_separation = 12
+theme_override_styles/normal = SubResource("StyleBoxFlat_lswrh")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_l03bq")
+theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_j3dkl")
+icon = SubResource("AtlasTexture_527nk")
+expand_icon = true
+
+[node name="FacilitiesTabBtn" type="Button" parent="MainHUDPanel/MasterHorizontalSplit/TwoRowMatrix/TopRowToolbar/TopRowPacker/Container3" unique_id=141513705]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(56, 56)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+tooltip_text = "Add Facilities"
+theme_override_constants/h_separation = 12
+theme_override_styles/normal = SubResource("StyleBoxFlat_o7mi6")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_j3ghn")
+theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_5l7ml")
+toggle_mode = true
+icon = SubResource("AtlasTexture_igvit")
+expand_icon = true
+
+[node name="ResidentialTabBtn" type="Button" parent="MainHUDPanel/MasterHorizontalSplit/TwoRowMatrix/TopRowToolbar/TopRowPacker/Container3" unique_id=993904148]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(56, 56)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+tooltip_text = "Add Residential"
+theme_override_constants/h_separation = 12
+theme_override_styles/normal = SubResource("StyleBoxFlat_kyr88")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_624o2")
+theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_1pbwk")
+toggle_mode = true
+icon = SubResource("AtlasTexture_h6mq2")
+expand_icon = true
+
+[node name="Container4" type="HBoxContainer" parent="MainHUDPanel/MasterHorizontalSplit/TwoRowMatrix/TopRowToolbar/TopRowPacker" unique_id=118999812]
+custom_minimum_size = Vector2(44, 44)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="RoomsTabBtn" type="Button" parent="MainHUDPanel/MasterHorizontalSplit/TwoRowMatrix/TopRowToolbar/TopRowPacker/Container4" unique_id=1138902569]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(56, 56)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+tooltip_text = "Add Room"
+theme_override_constants/h_separation = 12
+theme_override_styles/normal = SubResource("StyleBoxFlat_llxqw")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_kyo0y")
+theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_i6uyg")
+toggle_mode = true
+icon = SubResource("AtlasTexture_uif4p")
+expand_icon = true
+
+[node name="DoorsTabBtn" type="Button" parent="MainHUDPanel/MasterHorizontalSplit/TwoRowMatrix/TopRowToolbar/TopRowPacker/Container4" unique_id=526580176]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(56, 56)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+tooltip_text = "Add Door"
+theme_override_constants/h_separation = 12
+theme_override_styles/normal = SubResource("StyleBoxFlat_ubemu")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_sh11y")
+theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_xbtx3")
+toggle_mode = true
+icon = SubResource("AtlasTexture_jwwqv")
+expand_icon = true
+
+[node name="CorridorBtn" type="Button" parent="MainHUDPanel/MasterHorizontalSplit/TwoRowMatrix/TopRowToolbar/TopRowPacker/Container4" unique_id=1068329366]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(56, 56)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+tooltip_text = "Add Corridor"
+theme_override_constants/h_separation = 12
+theme_override_styles/normal = SubResource("StyleBoxFlat_pxg5s")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_naq88")
+theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_5i5a3")
+toggle_mode = true
+icon = SubResource("AtlasTexture_0apt7")
+expand_icon = true
+
+[node name="UpperFloorBtn" type="Button" parent="MainHUDPanel/MasterHorizontalSplit/TwoRowMatrix/TopRowToolbar/TopRowPacker/Container4" unique_id=1481090394]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(56, 56)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+tooltip_text = "Add New Floor"
+theme_override_constants/h_separation = 12
+theme_override_styles/normal = SubResource("StyleBoxFlat_rmq6i")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_l5hp2")
+theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_qg06s")
+toggle_mode = true
+icon = SubResource("AtlasTexture_64et0")
+expand_icon = true
+
+[node name="StaircaseBtn" type="Button" parent="MainHUDPanel/MasterHorizontalSplit/TwoRowMatrix/TopRowToolbar/TopRowPacker/Container4" unique_id=81357132]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(56, 56)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+tooltip_text = "Add Staircase"
+theme_override_constants/h_separation = 12
+theme_override_styles/normal = SubResource("StyleBoxFlat_7qoq0")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_fd07o")
+theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_lcds7")
+toggle_mode = true
+icon = SubResource("AtlasTexture_xi5y0")
+expand_icon = true
+
+[node name="ElevatorBtn" type="Button" parent="MainHUDPanel/MasterHorizontalSplit/TwoRowMatrix/TopRowToolbar/TopRowPacker/Container4" unique_id=1266727379]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(56, 56)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+tooltip_text = "Add Elevator"
+theme_override_constants/h_separation = 12
+theme_override_styles/normal = SubResource("StyleBoxFlat_tcawx")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_sdm52")
+theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_jg3sf")
+toggle_mode = true
+icon = SubResource("AtlasTexture_nubei")
+expand_icon = true
+
+[node name="Container5" type="HBoxContainer" parent="MainHUDPanel/MasterHorizontalSplit/TwoRowMatrix/TopRowToolbar/TopRowPacker" unique_id=1153763995]
+custom_minimum_size = Vector2(44, 44)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="TeachersPanelBtn" type="Button" parent="MainHUDPanel/MasterHorizontalSplit/TwoRowMatrix/TopRowToolbar/TopRowPacker/Container5" unique_id=559952638]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(56, 56)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+tooltip_text = "Teachers Panel"
+theme_override_constants/h_separation = 12
+icon = SubResource("AtlasTexture_03xox")
+expand_icon = true
+
+[node name="StaffsPanelBtn" type="Button" parent="MainHUDPanel/MasterHorizontalSplit/TwoRowMatrix/TopRowToolbar/TopRowPacker/Container5" unique_id=957341516]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(56, 56)
+layout_mode = 2
+tooltip_text = "Staffs Panel"
+theme_override_constants/h_separation = 12
+icon = SubResource("AtlasTexture_v7vpr")
+expand_icon = true
+
+[node name="StudentsPanel" type="Button" parent="MainHUDPanel/MasterHorizontalSplit/TwoRowMatrix/TopRowToolbar/TopRowPacker/Container5" unique_id=741079371]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(56, 56)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+tooltip_text = "Students Panel"
+theme_override_constants/h_separation = 12
+icon = SubResource("AtlasTexture_d0w2y")
+expand_icon = true
+
+[node name="TimetablePanelBtn" type="Button" parent="MainHUDPanel/MasterHorizontalSplit/TwoRowMatrix/TopRowToolbar/TopRowPacker/Container5" unique_id=1153033609]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(56, 56)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+tooltip_text = "Timetable Panel"
+theme_override_constants/h_separation = 12
+icon = SubResource("AtlasTexture_e4hct")
+expand_icon = true
+
+[node name="AdminPanelBtn" type="Button" parent="MainHUDPanel/MasterHorizontalSplit/TwoRowMatrix/TopRowToolbar/TopRowPacker/Container5" unique_id=1567933563]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(56, 56)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+tooltip_text = "Admin Panel"
+theme_override_constants/h_separation = 12
+icon = SubResource("AtlasTexture_woodm")
+expand_icon = true
+
+[node name="CoCurricularBtn" type="Button" parent="MainHUDPanel/MasterHorizontalSplit/TwoRowMatrix/TopRowToolbar/TopRowPacker/Container5" unique_id=515083578]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(56, 56)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+tooltip_text = "Co-Curricular Panel"
+theme_override_constants/h_separation = 12
+icon = SubResource("AtlasTexture_q1vpc")
+expand_icon = true
+
+[node name="EventsPanelBtn" type="Button" parent="MainHUDPanel/MasterHorizontalSplit/TwoRowMatrix/TopRowToolbar/TopRowPacker/Container5" unique_id=188851973]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(56, 56)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+tooltip_text = "Events Panel"
+theme_override_constants/h_separation = 12
+icon = SubResource("AtlasTexture_tr3hu")
+expand_icon = true
+
+[node name="StatsPanelBtn" type="Button" parent="MainHUDPanel/MasterHorizontalSplit/TwoRowMatrix/TopRowToolbar/TopRowPacker/Container5" unique_id=1341151680]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(56, 56)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+tooltip_text = "School Stats Panel"
+theme_override_constants/h_separation = 12
+icon = SubResource("AtlasTexture_wluyw")
+expand_icon = true
+
+[node name="BudgetPanelBtn" type="Button" parent="MainHUDPanel/MasterHorizontalSplit/TwoRowMatrix/TopRowToolbar/TopRowPacker/Container5" unique_id=1568604991]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(56, 56)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+tooltip_text = "School Budget Panel"
+theme_override_constants/h_separation = 12
+icon = SubResource("AtlasTexture_ggoye")
+expand_icon = true
+
+[node name="RightSideElasticSpacer" type="Control" parent="MainHUDPanel/MasterHorizontalSplit/TwoRowMatrix/TopRowToolbar/TopRowPacker" unique_id=1414191788]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Container6" type="HBoxContainer" parent="MainHUDPanel/MasterHorizontalSplit/TwoRowMatrix/TopRowToolbar/TopRowPacker" unique_id=468440319]
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+size_flags_horizontal = 10
+size_flags_vertical = 4
+alignment = 2
+
+[node name="BulldozerBtn" type="Button" parent="MainHUDPanel/MasterHorizontalSplit/TwoRowMatrix/TopRowToolbar/TopRowPacker/Container6" unique_id=1380472352]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(56, 56)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+tooltip_text = "Bulldozer Mode"
+theme_override_constants/h_separation = 12
+toggle_mode = true
+icon = SubResource("AtlasTexture_ln5ve")
+expand_icon = true
+
+[node name="UpgradeBtn" type="Button" parent="MainHUDPanel/MasterHorizontalSplit/TwoRowMatrix/TopRowToolbar/TopRowPacker/Container6" unique_id=1748560733]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(56, 56)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+tooltip_text = "Upgrade Mode"
+theme_override_constants/h_separation = 12
+icon = SubResource("AtlasTexture_j3ghn")
+expand_icon = true
+
+[node name="DragCornerBtn" type="Button" parent="MainHUDPanel/MasterHorizontalSplit/TwoRowMatrix/TopRowToolbar/TopRowPacker/Container6" unique_id=414743051]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(56, 56)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+tooltip_text = "Drag Mode"
+theme_override_constants/h_separation = 12
+theme_override_styles/normal = SubResource("StyleBoxFlat_1cjhu")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_jcja2")
+theme_override_styles/hover = SubResource("StyleBoxFlat_1eag4")
+toggle_mode = true
+button_pressed = true
+button_group = SubResource("ButtonGroup_kyr88")
+icon = SubResource("AtlasTexture_2kqio")
+expand_icon = true
+
+[node name="PickIndividualBtn" type="Button" parent="MainHUDPanel/MasterHorizontalSplit/TwoRowMatrix/TopRowToolbar/TopRowPacker/Container6" unique_id=355198679]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(56, 56)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+tooltip_text = "Tiles Mode"
+theme_override_constants/h_separation = 12
+theme_override_styles/normal = SubResource("StyleBoxFlat_2h223")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_pqg26")
+theme_override_styles/hover = SubResource("StyleBoxFlat_e72uf")
+toggle_mode = true
+button_group = SubResource("ButtonGroup_kyr88")
+icon = SubResource("AtlasTexture_o7mi6")
+expand_icon = true
+
+[node name="UpperFloorViewBtn" type="Button" parent="MainHUDPanel/MasterHorizontalSplit/TwoRowMatrix/TopRowToolbar/TopRowPacker/Container6" unique_id=1239583230]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(56, 56)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+tooltip_text = "Upper Floor View"
+theme_override_constants/h_separation = 12
+icon = SubResource("AtlasTexture_tywln")
+expand_icon = true
+
+[node name="EndPadding" type="Control" parent="MainHUDPanel/MasterHorizontalSplit/TwoRowMatrix/TopRowToolbar/TopRowPacker" unique_id=1008302603]
+layout_mode = 2
+size_flags_horizontal = 8
+
+[node name="BottomRowStats" type="PanelContainer" parent="MainHUDPanel/MasterHorizontalSplit/TwoRowMatrix" unique_id=1862567623]
+custom_minimum_size = Vector2(0, 36)
+layout_mode = 2
+
+[node name="RowLayout" type="HBoxContainer" parent="MainHUDPanel/MasterHorizontalSplit/TwoRowMatrix/BottomRowStats" unique_id=291715260]
+layout_mode = 2
+theme_override_constants/separation = 64
+
+[node name="Container1_Controls" type="HBoxContainer" parent="MainHUDPanel/MasterHorizontalSplit/TwoRowMatrix/BottomRowStats/RowLayout" unique_id=981351633]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="PausePlayBtn" type="Button" parent="MainHUDPanel/MasterHorizontalSplit/TwoRowMatrix/BottomRowStats/RowLayout/Container1_Controls" unique_id=1260505592]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(36, 28)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+tooltip_text = "Play/Pause"
+theme_override_constants/h_separation = 12
+icon = SubResource("AtlasTexture_5l7ml")
+icon_alignment = 1
+expand_icon = true
+
+[node name="TimeDateLabel" type="RichTextLabel" parent="MainHUDPanel/MasterHorizontalSplit/TwoRowMatrix/BottomRowStats/RowLayout/Container1_Controls" unique_id=950310294]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(250, 24)
+layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "Time and Date"
+mouse_filter = 1
+bbcode_enabled = true
+horizontal_alignment = 1
+
+[node name="ForwardBtn" type="Button" parent="MainHUDPanel/MasterHorizontalSplit/TwoRowMatrix/BottomRowStats/RowLayout/Container1_Controls" unique_id=1741497755]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(36, 28)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+tooltip_text = "Fast 2x"
+theme_override_constants/h_separation = 12
+theme_override_styles/normal = SubResource("StyleBoxFlat_speed_normal")
+theme_override_styles/hover = SubResource("StyleBoxFlat_speed_hover")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_speed_pressed")
+theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_speed_hover_pressed")
+icon = SubResource("AtlasTexture_cnjgr")
+icon_alignment = 1
+expand_icon = true
+
+[node name="FastForwardBtn" type="Button" parent="MainHUDPanel/MasterHorizontalSplit/TwoRowMatrix/BottomRowStats/RowLayout/Container1_Controls" unique_id=26859407]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(36, 28)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+tooltip_text = "Fast 3x"
+theme_override_constants/h_separation = 12
+theme_override_styles/normal = SubResource("StyleBoxFlat_speed_normal")
+theme_override_styles/hover = SubResource("StyleBoxFlat_speed_hover")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_speed_pressed")
+theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_speed_hover_pressed")
+icon = SubResource("AtlasTexture_qu1va")
+icon_alignment = 1
+expand_icon = true
+
+[node name="Container2_Environment" type="HBoxContainer" parent="MainHUDPanel/MasterHorizontalSplit/TwoRowMatrix/BottomRowStats/RowLayout" unique_id=26348175]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_override_constants/separation = 16
+
+[node name="WeatherIcon" type="TextureRect" parent="MainHUDPanel/MasterHorizontalSplit/TwoRowMatrix/BottomRowStats/RowLayout/Container2_Environment" unique_id=1530904823]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="TemperatureLabel" type="Label" parent="MainHUDPanel/MasterHorizontalSplit/TwoRowMatrix/BottomRowStats/RowLayout/Container2_Environment" unique_id=1516128642]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="SeasonIcon" type="TextureRect" parent="MainHUDPanel/MasterHorizontalSplit/TwoRowMatrix/BottomRowStats/RowLayout/Container2_Environment" unique_id=1006751005]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = SubResource("AtlasTexture_5dkrs")
+expand_mode = 3
+stretch_mode = 5
+
+[node name="SeasonLabel" type="Label" parent="MainHUDPanel/MasterHorizontalSplit/TwoRowMatrix/BottomRowStats/RowLayout/Container2_Environment" unique_id=1384216716]
+unique_name_in_owner = true
+layout_mode = 2
+tooltip_text = "Season"
+mouse_filter = 1
+
+[node name="DaysLeftLabel" type="Label" parent="MainHUDPanel/MasterHorizontalSplit/TwoRowMatrix/BottomRowStats/RowLayout/Container2_Environment" unique_id=2123604392]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+tooltip_text = "Season End"
+mouse_filter = 1
+theme_override_styles/normal = SubResource("StyleBoxFlat_q1vpc")
+
+[node name="Container3_Identity" type="VBoxContainer" parent="MainHUDPanel/MasterHorizontalSplit/TwoRowMatrix/BottomRowStats/RowLayout" unique_id=1397356759]
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_constants/separation = 0
+
+[node name="SchoolNameLabel" type="Label" parent="MainHUDPanel/MasterHorizontalSplit/TwoRowMatrix/BottomRowStats/RowLayout/Container3_Identity" unique_id=1574285100]
+unique_name_in_owner = true
+layout_mode = 2
+tooltip_text = "School Name"
+mouse_filter = 0
+theme_override_constants/line_spacing = 1
+theme_override_font_sizes/font_size = 11
+theme_override_styles/normal = SubResource("StyleBoxFlat_e4hct")
+
+[node name="PrincipalNameLabel" type="Label" parent="MainHUDPanel/MasterHorizontalSplit/TwoRowMatrix/BottomRowStats/RowLayout/Container3_Identity" unique_id=77957845]
+unique_name_in_owner = true
+layout_mode = 2
+tooltip_text = "Principal"
+mouse_filter = 0
+theme_override_font_sizes/font_size = 9
+theme_override_styles/normal = SubResource("StyleBoxFlat_woodm")
+text = "Azeem"
+
+[node name="Container4_Population" type="HBoxContainer" parent="MainHUDPanel/MasterHorizontalSplit/TwoRowMatrix/BottomRowStats/RowLayout" unique_id=129099060]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_constants/separation = 12
+
+[node name="StudentIcon" type="TextureRect" parent="MainHUDPanel/MasterHorizontalSplit/TwoRowMatrix/BottomRowStats/RowLayout/Container4_Population" unique_id=1263449914]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = SubResource("AtlasTexture_k4h5g")
+expand_mode = 3
+stretch_mode = 5
+
+[node name="StudentCountLabel" type="Label" parent="MainHUDPanel/MasterHorizontalSplit/TwoRowMatrix/BottomRowStats/RowLayout/Container4_Population" unique_id=2076977702]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "Students Enrolment"
+mouse_filter = 0
+theme_override_styles/normal = SubResource("StyleBoxFlat_03xox")
+text = "10"
+horizontal_alignment = 1
+
+[node name="Padding" type="Control" parent="MainHUDPanel/MasterHorizontalSplit/TwoRowMatrix/BottomRowStats/RowLayout/Container4_Population" unique_id=490425965]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="TeacherIcon" type="TextureRect" parent="MainHUDPanel/MasterHorizontalSplit/TwoRowMatrix/BottomRowStats/RowLayout/Container4_Population" unique_id=1676802094]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = SubResource("AtlasTexture_f683u")
+expand_mode = 3
+stretch_mode = 5
+
+[node name="TeacherCountLabel" type="Label" parent="MainHUDPanel/MasterHorizontalSplit/TwoRowMatrix/BottomRowStats/RowLayout/Container4_Population" unique_id=1371494954]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "Teachers Headcount"
+mouse_filter = 0
+theme_override_styles/normal = SubResource("StyleBoxFlat_v7vpr")
+text = "2"
+horizontal_alignment = 1
+
+[node name="Padding2" type="Control" parent="MainHUDPanel/MasterHorizontalSplit/TwoRowMatrix/BottomRowStats/RowLayout/Container4_Population" unique_id=1315045197]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="StaffIcon" type="TextureRect" parent="MainHUDPanel/MasterHorizontalSplit/TwoRowMatrix/BottomRowStats/RowLayout/Container4_Population" unique_id=536997554]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+texture = SubResource("AtlasTexture_satfp")
+expand_mode = 3
+stretch_mode = 5
+
+[node name="StaffCountLabel" type="Label" parent="MainHUDPanel/MasterHorizontalSplit/TwoRowMatrix/BottomRowStats/RowLayout/Container4_Population" unique_id=850158580]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "Staffs Hired"
+mouse_filter = 0
+theme_override_styles/normal = SubResource("StyleBoxFlat_d0w2y")
+text = "0"
+
+[node name="Container5_Finance" type="HBoxContainer" parent="MainHUDPanel/MasterHorizontalSplit/TwoRowMatrix/BottomRowStats/RowLayout" unique_id=1626320964]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="TreasuryIcon" type="TextureRect" parent="MainHUDPanel/MasterHorizontalSplit/TwoRowMatrix/BottomRowStats/RowLayout/Container5_Finance" unique_id=2001376823]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = SubResource("AtlasTexture_h4ima")
+expand_mode = 3
+stretch_mode = 5
+
+[node name="TreasuryNumberLabel" type="Label" parent="MainHUDPanel/MasterHorizontalSplit/TwoRowMatrix/BottomRowStats/RowLayout/Container5_Finance" unique_id=1277503316]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "Money Available"
+mouse_filter = 0
+theme_override_styles/normal = SubResource("StyleBoxFlat_nubei")
+text = "$150,000.00"
+horizontal_alignment = 1
+
+[node name="CashFlowLabel" type="Label" parent="MainHUDPanel/MasterHorizontalSplit/TwoRowMatrix/BottomRowStats/RowLayout/Container5_Finance" unique_id=1419056439]
+unique_name_in_owner = true
+layout_mode = 2
+tooltip_text = "Surplus(Green)
+Deficit(Red)"
+mouse_filter = 0
+
+[node name="BottomRightElasticSpacer" type="Control" parent="MainHUDPanel/MasterHorizontalSplit/TwoRowMatrix/BottomRowStats/RowLayout" unique_id=38903579]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Container6_Satisfaction" type="HBoxContainer" parent="MainHUDPanel/MasterHorizontalSplit/TwoRowMatrix/BottomRowStats/RowLayout" unique_id=2028482549]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="HappinessMatrix" type="HBoxContainer" parent="MainHUDPanel/MasterHorizontalSplit/TwoRowMatrix/BottomRowStats/RowLayout/Container6_Satisfaction" unique_id=1287480093]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Smiley0_VerySad" type="TextureRect" parent="MainHUDPanel/MasterHorizontalSplit/TwoRowMatrix/BottomRowStats/RowLayout/Container6_Satisfaction/HappinessMatrix" unique_id=2035208607]
+unique_name_in_owner = true
+modulate = Color(1, 1, 1, 0.3137255)
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+tooltip_text = "Very Sad"
+texture = SubResource("AtlasTexture_xxnc1")
+expand_mode = 3
+stretch_mode = 5
+
+[node name="Smiley1_Sad" type="TextureRect" parent="MainHUDPanel/MasterHorizontalSplit/TwoRowMatrix/BottomRowStats/RowLayout/Container6_Satisfaction/HappinessMatrix" unique_id=1299565604]
+unique_name_in_owner = true
+modulate = Color(1, 1, 1, 0.3137255)
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+tooltip_text = "Sad"
+texture = SubResource("AtlasTexture_x6euy")
+expand_mode = 3
+stretch_mode = 5
+
+[node name="Smiley2_Neutral" type="TextureRect" parent="MainHUDPanel/MasterHorizontalSplit/TwoRowMatrix/BottomRowStats/RowLayout/Container6_Satisfaction/HappinessMatrix" unique_id=869731369]
+unique_name_in_owner = true
+modulate = Color(1, 1, 1, 0.3137255)
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+tooltip_text = "Neutral"
+texture = SubResource("AtlasTexture_8kl0o")
+expand_mode = 3
+stretch_mode = 5
+
+[node name="Smiley3_Happy" type="TextureRect" parent="MainHUDPanel/MasterHorizontalSplit/TwoRowMatrix/BottomRowStats/RowLayout/Container6_Satisfaction/HappinessMatrix" unique_id=648413258]
+unique_name_in_owner = true
+modulate = Color(1, 1, 1, 0.3137255)
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+tooltip_text = "Happy"
+texture = SubResource("AtlasTexture_4dfjt")
+expand_mode = 3
+stretch_mode = 5
+
+[node name="TextureRect" type="TextureRect" parent="MainHUDPanel/MasterHorizontalSplit/TwoRowMatrix/BottomRowStats/RowLayout/Container6_Satisfaction/HappinessMatrix" unique_id=318204249]
+modulate = Color(1, 1, 1, 0.3137255)
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+tooltip_text = "Very Happy"
+texture = SubResource("AtlasTexture_wyhgc")
+expand_mode = 3
+stretch_mode = 5
+
+[node name="RightPadding" type="Control" parent="MainHUDPanel/MasterHorizontalSplit/TwoRowMatrix/BottomRowStats/RowLayout" unique_id=1270159020]
+layout_mode = 2

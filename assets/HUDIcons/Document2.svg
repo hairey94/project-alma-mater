@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 64 64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+    <g id="lightning.png" transform="matrix(0.023486,0,0,0.023486,26.963749,33.952255)">
+        <g transform="matrix(42.578824,-0,-0,42.578824,-1148.084706,-1445.647059)">
+            <use xlink:href="#_Image1" x="28.964" y="33.952" width="8px" height="12px"/>
+        </g>
+    </g>
+    <g id="sewer.png" transform="matrix(0.023486,0,0,0.023486,26.963749,17.994695)">
+        <g transform="matrix(42.578824,-0,-0,42.578824,-1148.084706,-766.192941)">
+            <use xlink:href="#_Image2" x="26.964" y="17.995" width="12px" height="12px"/>
+        </g>
+    </g>
+    <g id="water-tap.png" transform="matrix(0.023486,0,0,0.023486,26.963749,1.980548)">
+        <g transform="matrix(42.578824,-0,-0,42.578824,-1148.084706,-84.329412)">
+            <use xlink:href="#_Image2" x="26.964" y="1.981" width="12px" height="12px"/>
+        </g>
+    </g>
+    <g id="wifi.png" transform="matrix(0.023486,0,0,0.023486,26.963749,49.966401)">
+        <clipPath id="_clip3">
+            <rect x="0" y="0" width="512" height="512"/>
+        </clipPath>
+        <g clip-path="url(#_clip3)">
+            <g transform="matrix(42.578824,-0,-0,42.578824,-1148.084706,-2127.510588)">
+                <use xlink:href="#_Image4" x="26.964" y="50.966" width="12px" height="10px"/>
+            </g>
+        </g>
+    </g>
+    <defs>
+        <image id="_Image1" width="8px" height="12px" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAMCAYAAABfnvydAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAA1ElEQVQYlW3QIUtDARhG4WcMZbviUJFF22AKBplMMcnmxbC6YBm4aF0QRNDkD9C+tiIIgtiMtiFWsdg0KIhtgoPPPHbfek44vEwut0ajwL6sVdm+ZbjD6hScYeWZ4StviyxMwA2SAVfRaIyveRpQvWCvRAsc0Y1y+Sc6nYgk+Y1icfTBuMKhAltffEezGVGpRLRaEe129LnDrCV6u5wndKscR70ekc9/nlCbCu1xFmn6d89liWRK6PMw4r3GetYNy4+8pJxmnpRj84AbzGcKSOcywv4B/wc7VviZrOEAAAAASUVORK5CYII="/>
+        <image id="_Image2" width="12px" height="12px" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAACXBIWXMAAA7EAAAOxAGVKw4bAAABuElEQVQokTWRzWoTUQCFvzt37vxEx0naNBkbC0qoJaEGKSpo1UV2rhtwo0+gj5BlwKdw4VLIQihduBAXrhQMISC0pUaDYv2phiZp02Qyd9xMzvp8HM45olGrSCANGADnbTO95DlPpSFu9o5O9kOte8CLerPTJTGVgU1gHdgIfPdZcXXtiaOkE2rdAg6Ah41aJZgDm8DrerPzNp2y2sGifwmB3DscvAMUsA3YQGkOyHqzMwHwXWULaS7NJqeEWh8DU8Cb++aAbtQqCmB4NpvGOupLy8WShlfMeY/uXA2eFzKpGySS1XIe4G61nHfHYZTzlLjmLWTX9HigfFfhL1+5t+B7hXA8+vCq9f2jrJbzP4ET4BwQ/RtN9714vJJOqWy71/980bcDlfI8YzLcLRUuvDGTpBg4BH5Fcbza/tbfAlYcUz4wTOu+kCaObZVcJbMmsJWsoAAH+AssAjpIO5el7fp6FgLxbUOIxyaQSo7zgbMEcgDrz2Dyxfl60Or+Hu0IIYJIa19Wy3kbyCU9doFlYA8YhpG2j0aTl1EcZyIdd3VMywCuAz+AY2ADeA8UgQzQAW4Bn4BTYP0/6MWRO2Pzdv0AAAAASUVORK5CYII="/>
+        <image id="_Image4" width="12px" height="10px" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAKCAYAAACALL/6AAAACXBIWXMAAA7EAAAOxAGVKw4bAAABiElEQVQYlW2RzUsUcQCGn5nd+VrHInfcJdCFdZ3L+HFQPNQhiuhqCIsUFkE3D9461KWr3oe0U8dgxYOI/gGCgWERBCm4GKSLH0sG7pAzv91mfl4S9rDP9X1e3sOr0IbrewpgA1p1bvcPHUi3yapZtF4PF4eemKppdG/f/BTsXLytzu3W2gvKfznVNWQvvHCfvcpqWQAu41Cun298Ob483UvCeFPUosre8+9/rxeKDwr3y9cyQCZlKVO9jydSpCaORK28aq8BfEi7vmcpujLZqzk9iUw4CH/ySxwipaRg9jNolchqPRk7bd9zfa+ijH2+s/j09vRsXs/xNfhGlEQYqo6U0JItDFVnvHuMs2ad5frKklqyB2byeg6AgtFHQkIYR0QyoiVbFIx+APJ6jpI1MKOeiJNtkQgAHM1hpGuYIA5o/Gswao/gaA4AIhGcNes76fMfv1++a7x/Y93I9NlqpjmdK+/vX1Tvyliqj2493PpYrww24sAMg/BU1KL5Tt/g+p7l+p7VKbsCsqmQbUk9uKQAAAAASUVORK5CYII="/>
+    </defs>
+</svg>

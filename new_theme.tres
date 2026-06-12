@@ -1,0 +1,47 @@
+[gd_resource type="Theme" format=3 uid="uid://caleymb1jjwt5"]
+
+[ext_resource type="FontFile" uid="uid://cq6qlkpdbl4no" path="res://assets/fonts/Overpass/static/Overpass-Regular.ttf" id="1_amlv4"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_amlv4"]
+content_margin_left = 20.0
+content_margin_top = 12.0
+content_margin_right = 20.0
+content_margin_bottom = 12.0
+bg_color = Color(0.16078432, 0.15294118, 0.14901961, 0.39215687)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_i7eh4"]
+content_margin_left = 16.0
+content_margin_top = 12.0
+content_margin_right = 20.0
+content_margin_bottom = 12.0
+bg_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_78ylj"]
+content_margin_left = 24.0
+content_margin_top = 12.0
+content_margin_right = 20.0
+content_margin_bottom = 12.0
+bg_color = Color(0.05882353, 0.09019608, 0.16470589, 0.5882353)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[resource]
+default_font = ExtResource("1_amlv4")
+default_font_size = 24
+Button/colors/font_color = Color(0.9411765, 0.9529412, 0.9607843, 1)
+Button/colors/font_disabled_color = Color(0.3529412, 0.3529412, 0.34901962, 1)
+Button/colors/font_hover_color = Color(0.039215688, 0.13725491, 0.25882354, 1)
+Button/colors/icon_hover_color = Color(0.039215688, 0.13725491, 0.25882354, 1)
+Button/styles/disabled = SubResource("StyleBoxFlat_amlv4")
+Button/styles/hover = SubResource("StyleBoxFlat_i7eh4")
+Button/styles/normal = SubResource("StyleBoxFlat_78ylj")

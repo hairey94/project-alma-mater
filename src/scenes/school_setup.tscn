@@ -1,0 +1,246 @@
+[gd_scene format=3 uid="uid://dhcuea40t1aj8"]
+
+[ext_resource type="Script" uid="uid://sunv2wldvybi" path="res://src/scripts/school_setup.gd" id="1_tqafq"]
+[ext_resource type="Texture2D" uid="uid://btmc1lxfbfp7e" path="res://assets/angle-left.svg" id="2_5o81d"]
+[ext_resource type="FontFile" uid="uid://cq6qlkpdbl4no" path="res://assets/fonts/Overpass/static/Overpass-Regular.ttf" id="2_p10xr"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tqafq"]
+content_margin_left = 100.0
+content_margin_top = 100.0
+content_margin_right = 100.0
+content_margin_bottom = 100.0
+bg_color = Color(0.05882353, 0.09019608, 0.16470589, 0.5882353)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5o81d"]
+atlas = ExtResource("2_5o81d")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fmjv2"]
+content_margin_left = 10.0
+content_margin_top = 10.0
+content_margin_right = 10.0
+content_margin_bottom = 10.0
+bg_color = Color(0.08200001, 0.16459998, 0.2, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_h7aq5"]
+atlas = ExtResource("2_5o81d")
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_tqafq"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_p10xr"]
+content_margin_left = 10.0
+content_margin_top = 10.0
+content_margin_right = 10.0
+content_margin_bottom = 10.0
+bg_color = Color(0.08235294, 0.16470589, 0.2, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5o81d"]
+bg_color = Color(0.69411767, 0.8980392, 0.9607843, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_h7aq5"]
+content_margin_right = 100.0
+bg_color = Color(0.05882353, 0.09019608, 0.16470589, 0.5882353)
+
+[node name="SchoolSetup" type="Control" unique_id=2019666218]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_tqafq")
+
+[node name="CenterContainer" type="CenterContainer" parent="." unique_id=1073306372]
+custom_minimum_size = Vector2(2560, 1440)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CenterContainer" unique_id=957390350]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="LeftSideContainer" type="PanelContainer" parent="CenterContainer/HBoxContainer" unique_id=513445678]
+custom_minimum_size = Vector2(1280, 1440)
+layout_mode = 2
+size_flags_horizontal = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_tqafq")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CenterContainer/HBoxContainer/LeftSideContainer" unique_id=1685004208]
+layout_mode = 2
+theme_override_constants/separation = 24
+
+[node name="BackToMenuBtn" type="Button" parent="CenterContainer/HBoxContainer/LeftSideContainer/HBoxContainer" unique_id=1508987462]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+size_flags_vertical = 0
+tooltip_text = "Back to Main Menu"
+theme_override_colors/icon_normal_color = Color(1, 1, 1, 1)
+theme_override_colors/icon_hover_color = Color(0.08235294, 0.16470589, 0.2, 1)
+theme_override_icons/icon = SubResource("AtlasTexture_5o81d")
+theme_override_styles/normal = SubResource("StyleBoxFlat_fmjv2")
+icon = SubResource("AtlasTexture_h7aq5")
+icon_alignment = 1
+expand_icon = true
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/HBoxContainer/LeftSideContainer/HBoxContainer" unique_id=1784706495]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+theme_override_constants/separation = 12
+
+[node name="TitleLabel" type="Label" parent="CenterContainer/HBoxContainer/LeftSideContainer/HBoxContainer/VBoxContainer" unique_id=496602560]
+layout_mode = 2
+theme_override_font_sizes/font_size = 60
+text = "Establish Your Institution"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="CenterContainer/HBoxContainer/LeftSideContainer/HBoxContainer/VBoxContainer" unique_id=157752722]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="SchoolNameLabel" type="Label" parent="CenterContainer/HBoxContainer/LeftSideContainer/HBoxContainer/VBoxContainer" unique_id=2112742961]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_p10xr")
+theme_override_font_sizes/font_size = 20
+text = "School Name"
+
+[node name="SchoolNameRow" type="HBoxContainer" parent="CenterContainer/HBoxContainer/LeftSideContainer/HBoxContainer/VBoxContainer" unique_id=867714479]
+layout_mode = 2
+
+[node name="SchoolNameInput" type="LineEdit" parent="CenterContainer/HBoxContainer/LeftSideContainer/HBoxContainer/VBoxContainer/SchoolNameRow" unique_id=1905198139]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(500, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+middle_mouse_paste_enabled = false
+drag_and_drop_selection_enabled = false
+select_all_on_focus = true
+
+[node name="RandomSchoolBtn" type="Button" parent="CenterContainer/HBoxContainer/LeftSideContainer/HBoxContainer/VBoxContainer/SchoolNameRow" unique_id=1711247217]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "🎲"
+
+[node name="Type" type="Label" parent="CenterContainer/HBoxContainer/LeftSideContainer/HBoxContainer/VBoxContainer" unique_id=1623469428]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_p10xr")
+theme_override_font_sizes/font_size = 20
+text = "School Type"
+vertical_alignment = 1
+
+[node name="SchoolTypeSelector" type="HBoxContainer" parent="CenterContainer/HBoxContainer/LeftSideContainer/HBoxContainer/VBoxContainer" unique_id=462175548]
+layout_mode = 2
+theme_override_constants/separation = 24
+
+[node name="SchoolTypeOption" type="OptionButton" parent="CenterContainer/HBoxContainer/LeftSideContainer/HBoxContainer/VBoxContainer/SchoolTypeSelector" unique_id=958895395]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(400, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+selected = 5
+item_count = 8
+popup/item_0/text = "Kindergarten"
+popup/item_0/id = 0
+popup/item_0/disabled = true
+popup/item_1/text = "Elementary School"
+popup/item_1/id = 1
+popup/item_1/disabled = true
+popup/item_2/text = "Primary School"
+popup/item_2/id = 2
+popup/item_2/disabled = true
+popup/item_3/text = "Middle School"
+popup/item_3/id = 3
+popup/item_3/disabled = true
+popup/item_4/text = "High School"
+popup/item_4/id = 4
+popup/item_4/disabled = true
+popup/item_5/text = "Secondary School"
+popup/item_5/id = 5
+popup/item_6/text = "College"
+popup/item_6/id = 6
+popup/item_6/disabled = true
+popup/item_7/text = "University"
+popup/item_7/id = 7
+popup/item_7/disabled = true
+
+[node name="HSeparator2" type="HSeparator" parent="CenterContainer/HBoxContainer/LeftSideContainer/HBoxContainer/VBoxContainer" unique_id=1177583719]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="PrincipalNameLabel" type="Label" parent="CenterContainer/HBoxContainer/LeftSideContainer/HBoxContainer/VBoxContainer" unique_id=735980022]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_p10xr")
+theme_override_font_sizes/font_size = 20
+text = "Principal Name"
+
+[node name="GenderSelector" type="HBoxContainer" parent="CenterContainer/HBoxContainer/LeftSideContainer/HBoxContainer/VBoxContainer" unique_id=60754347]
+layout_mode = 2
+theme_override_constants/separation = 24
+
+[node name="MaleCheckBox" type="CheckBox" parent="CenterContainer/HBoxContainer/LeftSideContainer/HBoxContainer/VBoxContainer/GenderSelector" unique_id=1005465359]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+button_pressed = true
+button_group = SubResource("ButtonGroup_tqafq")
+text = "Male ♂"
+alignment = 1
+
+[node name="FemaleCheckBox" type="CheckBox" parent="CenterContainer/HBoxContainer/LeftSideContainer/HBoxContainer/VBoxContainer/GenderSelector" unique_id=1665648511]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+button_group = SubResource("ButtonGroup_tqafq")
+text = "Female ♀"
+alignment = 1
+
+[node name="PrincipalNameRow" type="HBoxContainer" parent="CenterContainer/HBoxContainer/LeftSideContainer/HBoxContainer/VBoxContainer" unique_id=860358892]
+layout_mode = 2
+
+[node name="PrincipalNameInput" type="LineEdit" parent="CenterContainer/HBoxContainer/LeftSideContainer/HBoxContainer/VBoxContainer/PrincipalNameRow" unique_id=426120958]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(500, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+
+[node name="RandomPrincipalBtn" type="Button" parent="CenterContainer/HBoxContainer/LeftSideContainer/HBoxContainer/VBoxContainer/PrincipalNameRow" unique_id=8324515]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "🎲"
+
+[node name="HSeparator3" type="HSeparator" parent="CenterContainer/HBoxContainer/LeftSideContainer/HBoxContainer/VBoxContainer" unique_id=1381364981]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="ConfirmSetupBtn" type="Button" parent="CenterContainer/HBoxContainer/LeftSideContainer/HBoxContainer/VBoxContainer" unique_id=1508320609]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(200, 50)
+layout_mode = 2
+size_flags_horizontal = 8
+theme_override_font_sizes/font_size = 30
+theme_override_styles/normal = SubResource("StyleBoxFlat_p10xr")
+theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_5o81d")
+text = "Confirm"
+
+[node name="RightSideContainer" type="PanelContainer" parent="CenterContainer/HBoxContainer" unique_id=499968990]
+custom_minimum_size = Vector2(1280, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_h7aq5")

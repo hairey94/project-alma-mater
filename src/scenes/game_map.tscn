@@ -1,0 +1,83 @@
+[gd_scene format=3 uid="uid://ddgy61baq1aks"]
+
+[ext_resource type="Texture2D" uid="uid://ymyj30ljreto" path="res://assets/gemini3-svg.svg" id="1_1va4l"]
+[ext_resource type="Script" uid="uid://omdtls8v0o1n" path="res://src/scripts/game_map.gd" id="1_5fonf"]
+[ext_resource type="Texture2D" uid="uid://d187q1rohik1y" path="res://assets/gemini-svg.svg" id="1_gcorv"]
+[ext_resource type="Script" uid="uid://cpedq6fy4hfi" path="res://src/scripts/camera_2d.gd" id="2_hrtji"]
+[ext_resource type="Shader" uid="uid://y6i5wgi27610" path="res://src/scripts/blueprint_grid.gdshader" id="4_1j47p"]
+[ext_resource type="PackedScene" uid="uid://d1dxi4r4neph0" path="res://src/scenes/InGameHUD.tscn" id="4_tw6lq"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_hrtji"]
+texture = ExtResource("1_gcorv")
+texture_region_size = Vector2i(64, 64)
+0:0/0 = 0
+1:0/0 = 0
+2:0/0 = 0
+3:0/0 = 0
+0:1/0 = 0
+1:1/0 = 0
+2:1/0 = 0
+3:1/0 = 0
+0:2/0 = 0
+1:2/0 = 0
+2:2/0 = 0
+3:2/0 = 0
+0:3/0 = 0
+1:3/0 = 0
+2:3/0 = 0
+3:3/0 = 0
+
+[sub_resource type="TileSet" id="TileSet_55amd"]
+tile_size = Vector2i(64, 64)
+sources/0 = SubResource("TileSetAtlasSource_hrtji")
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_5fonf"]
+texture = ExtResource("1_1va4l")
+texture_region_size = Vector2i(64, 64)
+0:0/0 = 0
+1:0/0 = 0
+2:0/0 = 0
+3:0/0 = 0
+
+[sub_resource type="TileSet" id="TileSet_tw6lq"]
+tile_size = Vector2i(64, 64)
+sources/0 = SubResource("TileSetAtlasSource_5fonf")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_spb6t"]
+shader = ExtResource("4_1j47p")
+shader_parameter/tile_size = 64.0
+shader_parameter/border_color = Color(1, 1, 1, 0.5)
+shader_parameter/border_thickness = 1.5
+shader_parameter/camera_offset = Vector2(0, 0)
+shader_parameter/camera_zoom = 1.0
+shader_parameter/viewport_size = Vector2(1152, 648)
+
+[node name="GameMap" type="Node2D" unique_id=2077775826]
+script = ExtResource("1_5fonf")
+
+[node name="FieldLayer" type="TileMapLayer" parent="." unique_id=1273623843]
+tile_set = SubResource("TileSet_55amd")
+
+[node name="RoadLayer" type="TileMapLayer" parent="." unique_id=993363143]
+tile_set = SubResource("TileSet_tw6lq")
+
+[node name="BlueprintGridLayer" type="ColorRect" parent="." unique_id=1538020107]
+visible = false
+material = SubResource("ShaderMaterial_spb6t")
+custom_minimum_size = Vector2(4096, 4224)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 4096.0
+offset_bottom = 4224.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=1890058217]
+position = Vector2(12320, 12320)
+zoom = Vector2(0.5, 0.5)
+position_smoothing_enabled = true
+script = ExtResource("2_hrtji")
+
+[node name="InGameHUD" parent="." unique_id=1970903453 instance=ExtResource("4_tw6lq")]

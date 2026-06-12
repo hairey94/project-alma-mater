@@ -1,0 +1,41 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=5
+
+[application]
+
+config/name="Project Alma Mater"
+run/main_scene="res://src/scenes/boot.tscn"
+config/features=PackedStringArray("4.6", "Forward Plus")
+config/icon="res://icon.svg"
+
+[autoload]
+
+GlobalSignalBus="*uid://bd0t2o3em64tl"
+TimeManager="*uid://bbkhby72c1maw"
+GlobalTransferData="*uid://2bfffcv6x4ud"
+GameManager="*uid://bajsqxft20kt0"
+BuildingDatabase="*uid://d0jv5fqfu0hmo"
+
+[display]
+
+window/size/viewport_width=2560
+window/size/viewport_height=1440
+window/size/initial_position_type=0
+window/stretch/mode="canvas_items"
+window/stretch/aspect="expand"
+
+[physics]
+
+3d/physics_engine="Jolt Physics"
+
+[rendering]
+
+textures/canvas_textures/default_texture_filter=0
+rendering_device/driver.windows="d3d12"

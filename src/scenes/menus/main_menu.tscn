@@ -1,0 +1,198 @@
+[gd_scene format=3 uid="uid://wlvu8g07iuy7"]
+
+[ext_resource type="Script" uid="uid://dbwe6fy06wbyc" path="res://src/scripts/main_menu.gd" id="1_06t4h"]
+[ext_resource type="Theme" uid="uid://caleymb1jjwt5" path="res://new_theme.tres" id="1_7vrkn"]
+[ext_resource type="Texture2D" uid="uid://dpsyxlfgwqgki" path="res://assets/Gemini_Generated_Image_zhsxp4zhsxp4zhsx.png" id="3_1tw41"]
+[ext_resource type="FontFile" uid="uid://dyvdbo51xnjbv" path="res://assets/fonts/Passero_One/PasseroOne-Regular.ttf" id="4_0k4wn"]
+[ext_resource type="Script" uid="uid://c1qrka5uog5j0" path="res://src/scripts/sandbox_btn.gd" id="4_dy7ct"]
+[ext_resource type="Texture2D" uid="uid://pt8gn1g3wx6k" path="res://assets/Recolor Adjustment2.svg" id="4_j5v2v"]
+[ext_resource type="Script" uid="uid://cbdq5lidpe7vf" path="res://src/scripts/career_btn.gd" id="5_0o4t1"]
+[ext_resource type="Script" uid="uid://d2blal0gogjv3" path="res://src/scripts/load_btn.gd" id="6_0k4wn"]
+[ext_resource type="Texture2D" uid="uid://uh4m0wdtluhf" path="res://assets/ui/main_menu_icons.svg" id="6_1tw41"]
+[ext_resource type="Script" uid="uid://j0orkpsw6ef1" path="res://src/scripts/options_btn.gd" id="7_j5v2v"]
+[ext_resource type="Script" uid="uid://cvroga20ykma8" path="res://src/scripts/credits_btn.gd" id="8_iotk1"]
+[ext_resource type="Script" uid="uid://3n4lej5ppmsh" path="res://src/scripts/exit_game_btn.gd" id="9_w44g7"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_w3vl3"]
+atlas = ExtResource("6_1tw41")
+region = Rect2(0, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_d5wnb"]
+atlas = ExtResource("6_1tw41")
+region = Rect2(64, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gohnw"]
+atlas = ExtResource("6_1tw41")
+region = Rect2(128, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bx8dn"]
+atlas = ExtResource("6_1tw41")
+region = Rect2(192, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_csvu4"]
+atlas = ExtResource("6_1tw41")
+region = Rect2(256, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_uxeri"]
+atlas = ExtResource("6_1tw41")
+region = Rect2(320, 0, 64, 64)
+
+[node name="MainMenu" type="Control" unique_id=1276627570]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -1.0
+offset_right = -1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_7vrkn")
+script = ExtResource("1_06t4h")
+
+[node name="Background" type="TextureRect" parent="." unique_id=1588036285]
+self_modulate = Color(0.4862745, 0.4862745, 0.4862745, 1)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("3_1tw41")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="UIContainer" type="MarginContainer" parent="." unique_id=1867051560]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 100
+theme_override_constants/margin_top = 100
+theme_override_constants/margin_right = 100
+theme_override_constants/margin_bottom = 100
+
+[node name="MainMenuLayout" type="VBoxContainer" parent="UIContainer" unique_id=259524075]
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="TitleContainer" type="HBoxContainer" parent="UIContainer/MainMenuLayout" unique_id=45101503]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="LogoPlaceholder" type="TextureRect" parent="UIContainer/MainMenuLayout/TitleContainer" unique_id=269706629]
+custom_minimum_size = Vector2(128, 128)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 3
+texture = ExtResource("4_j5v2v")
+expand_mode = 3
+stretch_mode = 5
+
+[node name="ProjectAlmaMater" type="Label" parent="UIContainer/MainMenuLayout/TitleContainer" unique_id=1299684422]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_constants/line_spacing = -15
+theme_override_fonts/font = ExtResource("4_0k4wn")
+theme_override_font_sizes/font_size = 50
+text = "PROJECT
+Alma Mater"
+
+[node name="Spacer" type="Control" parent="UIContainer/MainMenuLayout" unique_id=94099509]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+
+[node name="MenuContainer" type="HBoxContainer" parent="UIContainer/MainMenuLayout" unique_id=743204198]
+layout_mode = 2
+alignment = 1
+
+[node name="LeftMenuColumn" type="VBoxContainer" parent="UIContainer/MainMenuLayout/MenuContainer" unique_id=1293757479]
+custom_minimum_size = Vector2(380, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+alignment = 1
+
+[node name="MenuList" type="VBoxContainer" parent="UIContainer/MainMenuLayout/MenuContainer/LeftMenuColumn" unique_id=713047136]
+layout_mode = 2
+size_flags_vertical = 6
+theme_override_constants/separation = 12
+
+[node name="SandboxBtn" type="Button" parent="UIContainer/MainMenuLayout/MenuContainer/LeftMenuColumn/MenuList" unique_id=1378753403]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 65)
+layout_mode = 2
+theme_override_constants/h_separation = 12
+text = "SANDBOX
+"
+icon = SubResource("AtlasTexture_w3vl3")
+alignment = 0
+expand_icon = true
+script = ExtResource("4_dy7ct")
+
+[node name="CareerBtn" type="Button" parent="UIContainer/MainMenuLayout/MenuContainer/LeftMenuColumn/MenuList" unique_id=118891034]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 65)
+layout_mode = 2
+theme_override_constants/h_separation = 12
+disabled = true
+text = "CAREER
+"
+icon = SubResource("AtlasTexture_d5wnb")
+alignment = 0
+expand_icon = true
+script = ExtResource("5_0o4t1")
+
+[node name="LoadBtn" type="Button" parent="UIContainer/MainMenuLayout/MenuContainer/LeftMenuColumn/MenuList" unique_id=1498196630]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 65)
+layout_mode = 2
+theme_override_constants/h_separation = 12
+disabled = true
+text = "LOAD
+"
+icon = SubResource("AtlasTexture_gohnw")
+alignment = 0
+expand_icon = true
+script = ExtResource("6_0k4wn")
+
+[node name="OptionsBtn" type="Button" parent="UIContainer/MainMenuLayout/MenuContainer/LeftMenuColumn/MenuList" unique_id=1195818358]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 65)
+layout_mode = 2
+theme_override_constants/h_separation = 12
+text = "OPTIONS
+"
+icon = SubResource("AtlasTexture_bx8dn")
+alignment = 0
+expand_icon = true
+script = ExtResource("7_j5v2v")
+
+[node name="CreditsBtn" type="Button" parent="UIContainer/MainMenuLayout/MenuContainer/LeftMenuColumn/MenuList" unique_id=1810860184]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 65)
+layout_mode = 2
+theme_override_constants/h_separation = 12
+text = "CREDITS"
+icon = SubResource("AtlasTexture_csvu4")
+alignment = 0
+expand_icon = true
+script = ExtResource("8_iotk1")
+
+[node name="ExitGameBtn" type="Button" parent="UIContainer/MainMenuLayout/MenuContainer/LeftMenuColumn/MenuList" unique_id=1629616041]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 65)
+layout_mode = 2
+theme_override_constants/h_separation = 12
+text = "EXIT GAME"
+icon = SubResource("AtlasTexture_uxeri")
+alignment = 0
+expand_icon = true
+script = ExtResource("9_w44g7")
+
+[node name="ViewerColumn" type="VBoxContainer" parent="UIContainer/MainMenuLayout/MenuContainer" unique_id=628654849]
+custom_minimum_size = Vector2(380, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+alignment = 1
