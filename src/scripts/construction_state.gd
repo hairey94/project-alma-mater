@@ -1,7 +1,7 @@
 extends RefCounted
 class_name ConstructionState
 
-enum State { IDLE, DRAGGING, PENDING_APPROVAL }
+enum State { IDLE, DRAGGING, PENDING_APPROVAL, EDITING }
 
 const PASTEL_PREVIEW_COLOR = Color("#a7f3d0")
 const PASTEL_STAGED_COLOR = Color("#fef08a")
@@ -18,9 +18,13 @@ var painted_preview_cells: Array[Vector2i] = []
 var staged_cells: Array[Vector2i] = []
 var blocked_cells: Array[Vector2i] = []
 
-var grid_bounds: Rect2i = Rect2i(0, 0, 64, 64)
+var editing_building_index: int = -1
+var editing_cells: Array[Vector2i] = []
 
+var grid_bounds: Rect2i = Rect2i(0, 0, 64, 64)
 var _extending: bool = false
+var _previous_state: State = State.IDLE
+
 var _field_layer: TileMapLayer
 var _plan_container: Node2D
 var _confirmed_container: Node2D
@@ -49,6 +53,7 @@ func continue_adding() -> void:
 	current_state = State.IDLE
 
 func start_drag(pos: Vector2i) -> void:
+	_previous_state = current_state
 	if current_tool == "tiles":
 		if _is_cell_blocked(pos):
 			return
@@ -70,6 +75,15 @@ func update_drag(cell: Vector2i) -> void:
 
 func end_drag(cell: Vector2i) -> void:
 	drag_end_cell = cell
+	if _previous_state == State.EDITING:
+		current_state = State.EDITING
+		convert_previews_to_staged()
+		drag_start_cell = Vector2i.ZERO
+		drag_end_cell = Vector2i.ZERO
+		painted_preview_cells.clear()
+		render_preview()
+		return
+
 	current_state = State.PENDING_APPROVAL
 	convert_previews_to_staged()
 	if staged_cells.is_empty():
@@ -91,10 +105,40 @@ func _render_cell_rect(cell: Vector2i, color: Color) -> void:
 	rect.size = Vector2(TILE_SIZE, TILE_SIZE)
 	rect.position = Vector2(cell.x * TILE_SIZE, cell.y * TILE_SIZE)
 	rect.color = color
+	rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_plan_container.add_child(rect)
 
 func render_preview() -> void:
 	_remove_all_children(_plan_container)
+	if current_state == State.DRAGGING and current_tool in ["move", "rotate", "move_rotate"] and editing_building_index >= 0:
+		var offset = drag_end_cell - drag_start_cell
+		for cell in editing_cells:
+			var preview_cell = cell + offset
+			var blocked = preview_cell.x < 0 or preview_cell.x >= grid_bounds.size.x or preview_cell.y < 0 or preview_cell.y >= grid_bounds.size.y or preview_cell in blocked_cells
+			_render_cell_rect(preview_cell, PASTEL_BLOCKED_COLOR if blocked else PASTEL_PREVIEW_COLOR)
+		return
+	if current_state == State.EDITING:
+		for cell in editing_cells:
+			_render_cell_rect(cell, PASTEL_STAGED_COLOR)
+		if current_tool == "tiles":
+			for cell in painted_preview_cells:
+				var color = PASTEL_BLOCKED_COLOR if _is_cell_blocked(cell) else PASTEL_PREVIEW_COLOR
+				_render_cell_rect(cell, color)
+			return
+
+		painted_preview_cells.clear()
+		var x_min = mini(drag_start_cell.x, drag_end_cell.x)
+		var x_max = maxi(drag_start_cell.x, drag_end_cell.x)
+		var y_min = mini(drag_start_cell.y, drag_end_cell.y)
+		var y_max = maxi(drag_start_cell.y, drag_end_cell.y)
+		for x in range(x_min, x_max):
+			for y in range(y_min, y_max):
+				var cell = Vector2i(x, y)
+				var color = PASTEL_BLOCKED_COLOR if _is_cell_blocked(cell) else PASTEL_PREVIEW_COLOR
+				_render_cell_rect(cell, color)
+				painted_preview_cells.append(cell)
+		return
+
 	if _extending:
 		for cell in staged_cells:
 			_render_cell_rect(cell, PASTEL_STAGED_COLOR)
@@ -120,6 +164,27 @@ func clear_preview_cells() -> void:
 	painted_preview_cells.clear()
 
 func convert_previews_to_staged() -> void:
+	if current_state == State.EDITING:
+		if painted_preview_cells.is_empty():
+			return
+		var has_adjacent = false
+		for cell in painted_preview_cells:
+			if _is_adjacent_to_any(cell, editing_cells):
+				has_adjacent = true
+				break
+		if not has_adjacent:
+			painted_preview_cells.clear()
+			render_preview()
+			return
+		for cell in painted_preview_cells:
+			if not cell in editing_cells and not _is_cell_blocked(cell):
+				editing_cells.append(cell)
+		painted_preview_cells.clear()
+		_remove_all_children(_plan_container)
+		for cell in editing_cells:
+			_render_cell_rect(cell, PASTEL_STAGED_COLOR)
+		return
+
 	if _extending:
 		for cell in painted_preview_cells:
 			if not cell in staged_cells and not _is_cell_blocked(cell):
@@ -138,15 +203,19 @@ func convert_previews_to_staged() -> void:
 		for cell in staged_cells:
 			_render_cell_rect(cell, PASTEL_STAGED_COLOR)
 
+func _make_tile_rect(cell: Vector2i, color: Color, parent: Node2D) -> void:
+	var rect = ColorRect.new()
+	rect.size = Vector2(TILE_SIZE, TILE_SIZE)
+	rect.position = Vector2(cell.x * TILE_SIZE, cell.y * TILE_SIZE)
+	rect.color = color
+	rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	parent.add_child(rect)
+
 func confirm_placement(target_atlas_coord: Vector2i) -> void:
 	_remove_all_children(_plan_container)
 	for cell in staged_cells:
 		_field_layer.set_cell(cell, 0, target_atlas_coord)
-		var rect = ColorRect.new()
-		rect.size = Vector2(TILE_SIZE, TILE_SIZE)
-		rect.position = Vector2(cell.x * TILE_SIZE, cell.y * TILE_SIZE)
-		rect.color = CONFIRMED_COLOR
-		_confirmed_container.add_child(rect)
+		_make_tile_rect(cell, CONFIRMED_COLOR, _confirmed_container)
 	staged_cells.clear()
 	current_state = State.IDLE
 
@@ -178,6 +247,112 @@ func remove_cell(cell: Vector2i) -> void:
 			render_preview()
 			if painted_preview_cells.is_empty():
 				current_state = State.IDLE
+	elif current_state == State.EDITING:
+		var idx = editing_cells.find(cell)
+		if idx >= 0:
+			editing_cells.remove_at(idx)
+			render_preview()
+
+
+static func _is_adjacent_to_any(cell: Vector2i, cells: Array[Vector2i]) -> bool:
+	if cells.is_empty():
+		return true
+	for c in cells:
+		if abs(cell.x - c.x) + abs(cell.y - c.y) == 1:
+			return true
+	return false
+
+func toggle_edit_cell(cell: Vector2i) -> void:
+	if current_state != State.EDITING:
+		return
+	var idx = editing_cells.find(cell)
+	if idx >= 0:
+		editing_cells.remove_at(idx)
+	else:
+		if not _is_cell_blocked(cell) and _is_adjacent_to_any(cell, editing_cells):
+			editing_cells.append(cell)
+	render_preview()
+
+func add_edit_cell(cell: Vector2i) -> void:
+	if current_state != State.EDITING:
+		return
+	if cell in editing_cells or _is_cell_blocked(cell):
+		return
+	if not _is_adjacent_to_any(cell, editing_cells):
+		return
+	editing_cells.append(cell)
+	painted_preview_cells.append(cell)
+	render_preview()
 
 func clear_all_confirmed() -> void:
 	_remove_all_children(_confirmed_container)
+
+func begin_edit(index: int, cells: Array[Vector2i]) -> void:
+	editing_building_index = index
+	editing_cells = cells.duplicate()
+	current_state = State.EDITING
+	drag_start_cell = Vector2i.ZERO
+	drag_end_cell = Vector2i.ZERO
+	painted_preview_cells.clear()
+	render_preview()
+
+func apply_edit() -> Array[Vector2i]:
+	var result = editing_cells.duplicate()
+	cancel_edit()
+	return result
+
+func cancel_edit() -> void:
+	editing_building_index = -1
+	editing_cells.clear()
+	current_state = State.IDLE
+	_remove_all_children(_plan_container)
+
+func move_cells(offset: Vector2i, other_buildings_cells: Array[Vector2i]) -> Array[Vector2i]:
+	var new_cells: Array[Vector2i] = []
+	for cell in editing_cells:
+		var target = cell + offset
+		if target.x < 0 or target.x >= grid_bounds.size.x or target.y < 0 or target.y >= grid_bounds.size.y:
+			return [] # Out of bounds
+		if target in other_buildings_cells:
+			return [] # Collision
+		new_cells.append(target)
+
+	editing_cells = new_cells
+	render_preview()
+	return editing_cells
+
+func rotate_cells(other_buildings_cells: Array[Vector2i]) -> Array[Vector2i]:
+	if editing_cells.is_empty():
+		return []
+
+	var cx := 0.0
+	var cy := 0.0
+	for cell in editing_cells:
+		cx += cell.x
+		cy += cell.y
+	cx /= editing_cells.size()
+	cy /= editing_cells.size()
+
+	var new_cells: Array[Vector2i] = []
+	for cell in editing_cells:
+		var local_x = cell.x - cx
+		var local_y = cell.y - cy
+		var rx = -local_y
+		var ry = local_x
+		var tx = cx + rx
+		var ty = cy + ry
+		var target = Vector2i(roundi(tx), roundi(ty))
+		if target.x < 0 or target.x >= grid_bounds.size.x or target.y < 0 or target.y >= grid_bounds.size.y:
+			return [] # Out of bounds
+		if target in other_buildings_cells:
+			return [] # Collision
+		if target in new_cells:
+			return [] # Duplicate cell (would shrink building)
+		new_cells.append(target)
+
+	if new_cells.size() != editing_cells.size():
+		return [] # Lost cells due to overlap
+
+	editing_cells = new_cells
+	render_preview()
+	return editing_cells

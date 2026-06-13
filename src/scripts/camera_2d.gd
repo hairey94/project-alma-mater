@@ -29,7 +29,7 @@ func _is_text_input_focused() -> bool:
 func _check_window_text_focus(node: Node) -> bool:
 	if node is Window and node.visible:
 		var focus = node.gui_get_focus_owner()
-		if focus is LineEdit or focus is TextEdit:
+		if focus and (focus is LineEdit or focus is TextEdit):
 			return true
 	for child in node.get_children():
 		if _check_window_text_focus(child):

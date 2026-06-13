@@ -840,6 +840,17 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_3utcp")
 theme_override_constants/margin_top = 2
 theme_override_constants/margin_bottom = 2
 
+[node name="ModeNotificationLabel" type="Label" parent="ModeControlToolbar/Indicators"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 24
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_styles/normal = SubResource("StyleBoxFlat_3utcp")
+theme_override_constants/margin_top = 2
+theme_override_constants/margin_bottom = 2
+
 [node name="DrawerPanel" type="PanelContainer" parent="." unique_id=1547875829]
 unique_name_in_owner = true
 z_index = 2

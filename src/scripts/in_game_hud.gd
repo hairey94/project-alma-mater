@@ -18,6 +18,7 @@ signal mode_changed(new_mode: GlobalTransferData.GameMode)
 @onready var principal_name_label: Label = %PrincipalNameLabel
 @onready var floor_indicator_label: Label = %FloorIndicatorLabel
 @onready var speed_indicator_label: Label = %SpeedIndicatorLabel
+@onready var mode_notification_label: Label = %ModeNotificationLabel
 @onready var pause_play_btn: Button = %PausePlayBtn
 @onready var forward_btn: Button = %ForwardBtn
 @onready var fast_forward_btn: Button = %FastForwardBtn
@@ -315,6 +316,11 @@ func _open_construction_drawer() -> void:
 	drawer_panel.global_position.y = ty + 40.0
 	tween.tween_property(drawer_panel, "global_position:y", ty, 0.15).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 
+func deselect_toolbar() -> void:
+	_clear_all_toolbar_highlights()
+	current_active_tab = ""
+	drawer_panel.visible = false
+
 func _close_construction_drawer() -> void:
 	_clear_all_toolbar_highlights()
 	current_active_tab = ""
@@ -405,7 +411,9 @@ func _set_input_tool(tool_name: String) -> void:
 func _pause_btn_icon(paused: bool) -> void:
 	var atlas = pause_play_btn.icon as AtlasTexture
 	if atlas:
-		atlas.region.position.x = pause_icon_x if paused else play_icon_x
+		var r = atlas.region
+		r.position.x = pause_icon_x if paused else play_icon_x
+		atlas.region = r
 
 func _get_blueprint_grid() -> ColorRect:
 	return get_node_or_null("../BlueprintGridLayer") as ColorRect
@@ -520,3 +528,9 @@ func dismiss_floating_approval_bubble() -> void:
 
 func show_building_rename_dialog(default_name: String, callback: Callable) -> void:
 	rename_dialog.show(self, default_name, callback)
+
+func show_hud_message(msg: String) -> void:
+	if mode_notification_label:
+		mode_notification_label.text = msg
+		await get_tree().create_timer(3.0).timeout
+		mode_notification_label.text = ""

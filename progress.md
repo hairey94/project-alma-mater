@@ -1,7 +1,7 @@
-# Project Progress — Campus Building Placement
+# Project Progress — Campus Building & Classroom System
 
 ## Overview
-Campus-block building placement system for Project Alma Mater (Godot 4). Supports drag-to-select and pick-individual-tile placement, right-click removal, bulldozer mode, camera/speed controls, building rename dialog with persistent labels, per-floor tracking, and corner-to-corner grid snapping.
+Campus-block building placement system for Project Alma Mater (Godot 4). Supports drag-to-select and pick-individual-tile placement, right-click removal, bulldozer mode, camera/speed controls, building rename dialog with persistent labels, per-floor tracking, corner-to-corner grid snapping, **building editing (move/rotate/add-delete tiles)**, and **classroom placement/editing with named labels**.
 
 ---
 
@@ -13,12 +13,14 @@ GameMap (Node2D) — game_map.gd
 ├── FieldLayer (TileMapLayer)           — tile_set=blueprint tiles (64×64 grid)
 ├── RoadLayer (TileMapLayer)            — tile_set=road tiles (y=64, y=65)
 ├── BlueprintGridLayer (ColorRect)      — ShaderMaterial, uniform white border per tile
+├── ClassroomLayer (TileMapLayer)       — z_index=2, mint green classroom tiles (atlas 1,0)
 ├── Camera2D                            — camera_2d.gd (WASD/QE/RF/ZC)
 ├── InGameHUD (CanvasLayer)             — packed scene InGameHUD.tscn
 ├── [HoverRect] (ColorRect)             — programmatic, semi-transparent hover indicator
 ├── [PlanContainer] (Node2D)            — programmatic, z=0, preview/staged ColorRects
 ├── [ConfirmedContainer] (Node2D)       — programmatic, z=1, permanent placed ColorRects
-└── [BuildingLabelsContainer] (Node2D)  — programmatic, z=2, building name labels
+├── [BuildingLabelsContainer] (Node2D)  — programmatic, z=3, building name labels
+└── [ClassroomContainer] (Node2D)       — programmatic, z_index=1, classroom edit visual rects
 ```
 
 ### InGameHUD.tscn (simplified tree)
@@ -34,6 +36,7 @@ InGameHUD (CanvasLayer) — in_game_hud.gd
 │       ├── SpeedIndicatorLabel (Label)  — amber (#f5b159), size 24
 │       └── FloorIndicatorLabel (Label)  — cyan (#b1e5f5), size 24
 ├── DrawerPanel — item drawer (services/buildings/etc)
+│   └── Classroom item toggles classroom placement tool
 ├── MainHUDPanel (PanelContainer)       — bottom HUD bar
 │   └── MasterHorizontalSplit (HBoxContainer)
 │       ├── MergedContainer1 — demand bars (water/sewage/electric/internet)
@@ -58,9 +61,16 @@ Camera2D — camera_2d.gd
 ### ConstructionState State Machine
 ```
 IDLE ──start_drag──→ DRAGGING ──end_drag──→ PENDING_APPROVAL ──confirm→ IDLE
-                    ↑                              │
-                    └─────── clear_preview ────────┘
-                         (cancel / right-click)
+                     ↑                              │
+                     └─────── clear_preview ────────┘
+                          (cancel / right-click)
+
+EDITING ──start_drag──→ DRAGGING ──end_drag──→ EDITING
+   (begin_edit)          (middle-click)         (move_cells / end_drag)
+                          rotate preview
+                          
+Classroom placement uses "tiles" tool + DRAGGING state with rectangle fill.
+Classroom editing uses EDITING state with tile add/delete.
 ```
 
 ---
@@ -69,77 +79,33 @@ IDLE ──start_drag──→ DRAGGING ──end_drag──→ PENDING_APPROVAL
 
 ### ✅ Completed (Chronological)
 
-1. **Project Structure Cleanup** — Deleted stale root-level files. Moved `school_setup.gd` → `src/scripts/`. Removed duplicate `GameManager` autoload.
+1—36. *(previous items 1–36 — see archived notes)*
 
-2. **Main Menu** — Fixed redundant dual signal/direct-call bug.
+37. **Classroom Placement System** — Players can select a "Classroom" tool from the toolbar, click inside a building, and drag to fill a **solid rectangle** (closed room shape). Classroom tiles render in mint green on `ClassroomLayer` (z=2). Placement respects building boundaries and doesn't overlap existing classrooms or other buildings.
 
-3. **GameMap / HUD Refactor** — Extracted `ConstructionState`, replaced `/root/GameMap` lookups with `find_parent`/`find_child`. Split components into `class_name` files. Replaced 6 button scripts with `HoverSlideButton`.
+38. **Classroom Tile Preview During Drag** — While dragging to place a classroom, mint-green tiles appear on `ClassroomLayer` in real-time. Cells outside the building or blocked by existing classrooms are excluded from the rectangle fill.
 
-4. **GameManager** — Uses `preload` instead of `load` strings. Fixed `_ready()` timing bug.
+39. **Classroom Layers & Z-Ordering** — `ClassroomLayer` (TileMapLayer, z=2) renders classroom tiles above building tiles. `ClassroomContainer` (Node2D, z=1) shows edit preview rects. Labels remain at z=3.
 
-5. **Building Plan Placement** — Plan preview using `Node2D` + `ColorRect` children (green preview → yellow staged → green confirmed).
+40. **Hover Indicator for Classroom Tiles** — When hovering over building cells in ARCHITECTURAL mode, the hover rect shows. Classroom cells additionally highlight to indicate click-to-edit.
 
-6. **Cell Gap Fix** — `remove_child` + `queue_free` in `_remove_all_children()`.
+41. **Classroom Labels** — Each classroom gets a named `Label` at its centroid (font_size=22, warm brown #d19447). Labels reposition dynamically when the classroom is moved/resized. Labels stored in `_classroom_data[]` alongside cells and building index.
 
-7. **Grid Alignment** — Removed half-tile offset. Grid lines align with tile boundaries.
+42. **Classroom Bulldoze on Building Demolish** — When a building is demolished, all classrooms belonging to that building are removed (tiles cleared via `erase_cell`, labels freed, `_classroom_data` entries removed). Building indices of remaining classrooms are adjusted.
 
-8. **Grid Constrained to FieldLayer** — `field_bounds` uniform excludes road area.
+43. **Building Move with Classrooms** — Moving a building (`move_rotate` tool) also moves its classrooms. Offset is tracked via `_building_edit_translation` and applied to classroom cells on confirm. Preview updates during drag.
 
-9. **Solid Pastel Colors** — Alpha 1.0 overlays completely hide field tiles.
+44. **Building Rotation with Classrooms** — Middle-click rotation of a building rotates its classrooms around the same fixed centroid. Uses **non-iterative** rotation formula (direct 90°/180°/270° in one step) to prevent cumulative rounding errors. Translation offset preserved after rotation.
 
-10. **Separate Confirmed Container** — `confirmed_container` (z=1) for permanent rects; `plan_container` (z=0) for preview/staged.
+45. **Classroom Boundary & Clash Prevention** — New classroom rectangle fill checks `c in building.cells` (boundary) and `c not in construction.blocked_cells` (existing classrooms + other buildings). `_get_classroom_blocked_cells()` returns all other-building cells + same-building classroom cells.
 
-11. **Mouse Input** — Replaced `is_action_pressed` with `event.button_index == MOUSE_BUTTON_LEFT`.
+46. **Classroom & Building Tile Edit Clash Prevention** — When editing a building/classroom (`add_delete` mode), `_process_construction_input` updates `blocked_cells` every frame: for classroom edits, blocks other classrooms in same building; for building edits, blocks other buildings' cells. `add_edit_cell()` re-checks via `_is_cell_blocked()`.
 
-12. **Button Visual States** — `normal`/`hover`/`pressed`/`hover_pressed` style overrides + `toggle_mode` + `ButtonGroup`.
+47. **Classroom Edit Dialog** — Clicking an existing classroom opens `BuildingEditDialog` with add/delete, move/rotate, rename, and demolish actions. Same flow as building editing but targets classroom data.
 
-13. **Camera Controls** — WASD move, QE 30° rotation snap, RF floor toggle, ZC zoom (0.3–3.0×) with viewport recalibration.
+48. **State Cleanup After Classroom Confirmation** — On classroom placement confirm: `construction.staged_cells` cleared, `current_state` reset to `IDLE`, `_classroom_placement_building_index` reset to -1.
 
-14. **Speed Buttons** — PausePlay standalone toggle; Forward/FastForward share `ButtonGroup(allow_unpress=false)`. `_speed_toggle_lock` prevents recursion. Mode guards block speed changes in non-GAME modes.
-
-15. **Mode Switching** — `_sync_speed_buttons()`. Mode borders, grid, and field modulate per mode.
-
-16. **Continue Adjacent Tile** — `continue_adding()`, `_extending` flag, merges in `convert_previews_to_staged()`.
-
-17. **Pick Individual Tile Mode** — Tool buttons wired via `_set_input_tool()`. Tiles paint on mouse move.
-
-18. **Right-Click Targeted Removal** — `remove_cell(cell)` for staged/painted cells; drag-tool cancels entire placement.
-
-19. **Bulldozer Restores Original Tiles** — `set_cell(cell, 0, Vector2i(0, 0))`.
-
-20. **Cursor-Tile Mapping** — `_cell_under_mouse()` uses `field_layer.get_local_mouse_position()`.
-
-21. **Confirmation Widget Passes Right-Click** — `mouse_filter = MOUSE_FILTER_IGNORE`.
-
-22. **ARCHITECTURAL Mode Guards** — Checked in `_process_construction_input()` and `_unhandled_input()`.
-
-23. **Building Rename Dialog** — `BuildingRenameDialog` (RefCounted) shows `Window` popup with LineEdit, Confirm/Cancel/Enter.
-
-24. **Building Name Labels** — `_add_building_label()` with font_size=20, near-black text, white shadow. Labels in z=2, persist across modes. Bulldozer tracks cell ownership.
-
-25. **X-Button Dismiss on Rename Dialog** — `close_requested` -> true-cancel path. Callback `func(confirmed, name)`.
-
-26. **Toolbar Name Labels from Setup** — `school_name_label` and `principal_name_label` wired to `GlobalTransferData`.
-
-27. **Rename Dialog Keyboard Guard** — `_is_text_input_focused()` checks all `Window` nodes recursively; gates WASD/QE/RF/ZC in `camera_2d.gd`.
-
-28. **Per-Floor Building Tracking** — `_building_data` entries store `floor_level`. `_get_occupied_cells(floor)` filters by floor. Placement blocked on occupied cells + same-floor.
-
-29. **Road/Grid Boundary Blocking** — `blocked_cells` and `grid_bounds` in `construction_state`. Road tiles (y=64,65) and out-of-bounds cells are blocked. Blocked preview shown in red (`PASTEL_BLOCKED_COLOR`).
-
-30. **Toolbar Restructure** — `ModeControlToolbar` changed from `HBoxContainer` → `VBoxContainer` with inner `Buttons` + `Indicators` HBox. Floor/Speed labels at size 24.
-
-31. **BlueGrid Shader Rewrite** — Uniform white border (#ffffff 0.5 alpha, 1.5px) per tile. Removed minor/major grid distinction. Updated `ShaderMaterial` params.
-
-32. **Floor View Signal** — `GlobalSignalBus.floor_view_swapped` emitted from `camera_2d.gd` on R/F; connected in HUD to update floor label.
-
-33. **Speed Display** — `_update_speed_display()` reads button state, shows ⏸ / 1× / 2× / 3×.
-
-34. **Camera Smoothing Disabled** — `position_smoothing_enabled = false` fixes tile alignment at max zoom (visual lag caused half-tile offset).
-
-35. **Mouse Hover Indicator** — Semi-transparent `ColorRect` tracks `_corner_under_mouse()` in ARCHITECTURAL and BULLDOZER modes. Red tint (0.35) on occupied tiles, white (0.2) on free tiles.
-
-36. **Corner-to-Corner Grid Snapping** — Two mouse-mapping functions: `_cell_under_mouse()` (floor via `local_to_map` for tiles/bulldozer) and `_corner_under_mouse()` (round-to-nearest-grid-intersection for drag tool). Drag uses exclusive range `range(x_min, x_max)`, corners at `[0, GRID_SIZE]`. Tiles tool stays cell-based.
+49. **Edit Mode Sync** — When switching between `add_delete` and `move_rotate` modes during building edit, `_building_edit_original_cells` is synced to current `editing_cells`, and rotation/translation state is reset. Prevents stale-base drift.
 
 ---
 
@@ -147,14 +113,15 @@ IDLE ──start_drag──→ DRAGGING ──end_drag──→ PENDING_APPROVAL
 
 | File | Purpose |
 |---|---|
-| `src/scripts/game_map.gd` | Main game map — placement, bulldozer, mode switching, right-click, building labels, hover, corner/cell mouse mapping |
-| `src/scripts/construction_state.gd` | Building plan state machine — drag/tiles/staged/preview/confirmed lifecycle, corner snapping |
+| `src/scripts/game_map.gd` | Main game map — placement, bulldozer, mode switching, building edit (move/rotate/add-delete), classroom placement/edit, labels, collision prevention, rotation math |
+| `src/scripts/construction_state.gd` | Building plan state machine — drag/tiles/staged/preview/confirmed lifecycle, corner snapping, edit/move/rotate logic |
 | `src/scripts/in_game_hud.gd` | HUD — mode buttons, speed controls, tool buttons, rename dialog, floor/speed indicators |
 | `src/scripts/camera_2d.gd` | Camera — WASD, QE rotate, RF floor, ZC zoom, text-focus guard, smoothing disabled |
-| `src/scripts/hud/building_rename_dialog.gd` | Popup Window for naming buildings |
+| `src/scripts/hud/building_edit_dialog.gd` | Reusable edit dialog for buildings and classrooms (add/delete, move/rotate, rename, demolish) |
+| `src/scripts/hud/building_rename_dialog.gd` | Popup Window for naming buildings/classrooms |
 | `src/scripts/hud/floating_confirm_widget.gd` | Confirm/Continue/Redrag floating bubble |
 | `src/scripts/blueprint_grid.gdshader` | Per-tile uniform white border shader |
-| `src/scenes/game_map.tscn` | Main scene — FieldLayer, RoadLayer, BlueprintGridLayer, Camera2D, InGameHUD |
+| `src/scenes/game_map.tscn` | Main scene — FieldLayer, RoadLayer, ClassroomLayer, BlueprintGridLayer, Camera2D, InGameHUD |
 | `src/scenes/InGameHUD.tscn` | Full HUD — ModeControlToolbar, DrawerPanel, MainHUDPanel, speed controls |
 
 ---
@@ -163,14 +130,18 @@ IDLE ──start_drag──→ DRAGGING ──end_drag──→ PENDING_APPROVAL
 
 - Plan overlay uses `Node2D` + `ColorRect` children — avoids missing `set_cell_modulate`.
 - Building placement writes to `FieldLayer` + permanent `ColorRect` in `confirmed_container`.
+- Classroom tiles use `ClassroomLayer` (TileMapLayer) with `erase_cell` for cleanup (not `set_cell` with empty atlas).
 - Grid shader uses `field_bounds` uniform with `>=` on right/bottom — excludes road rows.
 - `_cell_under_mouse()`: tiles/bulldozer use `local_to_map()` (floor-based). `_corner_under_mouse()`: drag tool uses `roundi` (corner-to-corner).
 - Drag selection uses **exclusive** range `range(x_min, x_max)` — corners define the selection bounds, tiles strictly between are filled.
 - Right-click handled in `_input` with `set_input_as_handled()` — fires before GUI processing.
 - Bulldozer uses `set_cell(cell, 0, Vector2i(0, 0))` — `erase_cell` left empty holes.
-- Building labels are separate from confirmed ColorRects and persist across all modes.
+- Building/classroom labels are separate from confirmed ColorRects and persist across all modes.
 - `position_smoothing_enabled = false` — WASD movement is already frame-rate smooth; smoothing caused visual/calculation misalignment at high zoom.
-- Hover indicator uses same `_corner_under_mouse()` function as drag tool — consistent corner-based feedback.
+- Classroom placement uses **rectangle fill** (closed room) instead of individual cell painting — drag defines a rectangle, interior cells within building boundary are filled.
+- Building rotation uses **non-iterative** formula (`match k {1,2,3}`) applied directly to original cells around a fixed centroid, avoiding cumulative rounding errors.
+- Translation and rotation are tracked separately (`_building_edit_translation` + `_building_edit_rotation_count`) and composed on confirm.
+- Edit mode switching syncs `_building_edit_original_cells` to current editing state to prevent stale-base drift after add/delete operations.
 
 ---
 
@@ -181,7 +152,9 @@ IDLE ──start_drag──→ DRAGGING ──end_drag──→ PENDING_APPROVAL
 | 0 (default) | `PlanContainer` | Preview/staged ColorRects during placement |
 | 0 (default) | `[HoverRect]` | Semi-transparent hover indicator (behind PlanContainer) |
 | 1 | `ConfirmedContainer` | Permanent ColorRects after confirmation |
-| 2 | `BuildingLabelsContainer` | Building name labels (always visible) |
+| 1 | `ClassroomContainer` | Classroom edit preview rects |
+| 2 | `ClassroomLayer` | Mint green classroom tilemap tiles |
+| 3 | `BuildingLabelsContainer` | Building and classroom name labels (always visible) |
 
 ---
 
@@ -192,3 +165,5 @@ IDLE ──start_drag──→ DRAGGING ──end_drag──→ PENDING_APPROVAL
 - `set_cell(cell, -1, Vector2i(-1, -1))` silently fails — `set_cell(cell, 0, Vector2i(0, 0))` used to restore original tile.
 - `FieldLayer` is a single `TileMapLayer` — all building tiles share it regardless of floor; per-floor separation is data-only (`_building_data.floor_level`).
 - Camera zoom is clamped to `MAX_ZOOM = 3.0`; `_zoom_camera()` in `game_map.gd` clamps to 2.0 (unused code path — zoom is handled in `camera_2d.gd`).
+- Classroom rectangle fill may produce non-rectangular results if part of the drag area is blocked by existing classrooms — blocked cells are simply skipped.
+- Rotating a building with irregular shape may place classroom cells slightly outside the rotated building boundary; no post-rotation clamp is performed.

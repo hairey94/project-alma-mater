@@ -1,8 +1,8 @@
 shader_type canvas_item;
 
 uniform float tile_size = 64.0;
-uniform vec4 border_color : source_color = vec4(1.0, 1.0, 1.0, 0.35);
-uniform float border_thickness = 1.0;
+uniform vec4 border_color : source_color = vec4(1.0, 1.0, 1.0, 1.0);
+uniform float border_thickness = 1.5;
 
 uniform vec2 camera_offset = vec2(0.0, 0.0);
 uniform float camera_zoom = 1.0;
