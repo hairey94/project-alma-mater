@@ -107,22 +107,47 @@ Classroom editing uses EDITING state with tile add/delete.
 
 49. **Edit Mode Sync** — When switching between `add_delete` and `move_rotate` modes during building edit, `_building_edit_original_cells` is synced to current `editing_cells`, and rotation/translation state is reset. Prevents stale-base drift.
 
+50. **Door Placement System** — Added door system via "doors → entrance → Single Door" item. Doors are 1-tile overlays placed at building/classroom edges. Middle-click toggles inward/outward swing direction during placement. Preview shows door symbol (parallel to edge). Placement validates: must be at edge (exactly 1 outside neighbor, not a corner tile), can't overlap other doors.
+
+51. **Door Visuals** — Architectural door symbol drawn using ColorRects under `_door_container` (z=3). Shows door panel line, wall gap frame, swing arc marker, and hinge point. Direction updates in real-time on middle-click. Warm brown (#d4a373) semi-transparent overlay.
+
+52. **Door Editing** — Left-click placed door opens BuildingEditDialog with Move/Rotate, Rename, Demolish actions. Move: click a new valid edge tile to relocate. Rotate: middle-click toggles inward/outward. Same validation as placement. Rename via standard rename dialog. Demolish with confirmation dialog.
+
+53. **Door Cleanup on Demolish** — Building demolish removes all associated doors and adjusts indices. Classroom demolish removes its doors and adjusts remaining door classroom indices.
+
+54. **Corridor Rotation Consistency** — Fixed `_is_corridor_connectivity_ok` using integer truncated centroid while building/classroom/door used floating-point, causing corridor misalignment on rotation. Unified all rotation transforms to use `_building_edit_centroid` (Vector2).
+
+55. **Door Rotation Centroid Fix** — Door rotation was computing `door_centroid` from truncated `Vector2i` centroids, causing displacement. Now passes `_building_edit_centroid` directly to `_transform_door_cell` with floating-point rounding.
+
+56. **Mouse Wheel No-Op** — Mouse wheel events consumed via `set_input_as_handled()` and dropped silently to prevent unintended edit dialog opening.
+
+57. **Dialog Repositioned to Bottom-Right** — Edit dialog positioned at `Vector2i(maxi(0, screen_size.x - window.size.x), maxi(0, screen_size.y - window.size.y))` instead of centered.
+
+58. **"Editing …" HUD Notifications** — All edit start functions (`_start_building_edit`, `_start_classroom_edit`, `_start_door_edit`) now show a `hud_message("Editing %s" …)` call.
+
+59. **Classroom Re-add After Delete** — Fixed `_get_classroom_blocked_cells` to skip current editing classroom's cells, enabling tile re-addition within the same edit session.
+
+60. **Classroom Label Overlap & Style** — Classroom label font: black `Color(0, 0, 0, 1)`, size 26 (was 22), vertical offset -36 (was -20). Missing offset added to `_confirm_classroom_edit`, `_rename_classroom`, `_apply_building_edit_classroom_changes`. White shadow added for readability.
+
+61. **Classroom Overrides Corridors** — On classroom edit confirm, corridor cells overlapping classroom tiles are removed from both `_corridor_data` and `corridor_layer`. Hover indicator shows orange for corridor-override cells, green for valid empty, red for invalid. HUD message updated to: "Left-click to add tiles, right-click to delete. Corridor tiles will be replaced."
+
 ---
 
 ## Key Files
 
-| File | Purpose |
-|---|---|
-| `src/scripts/game_map.gd` | Main game map — placement, bulldozer, mode switching, building edit (move/rotate/add-delete), classroom placement/edit, labels, collision prevention, rotation math |
-| `src/scripts/construction_state.gd` | Building plan state machine — drag/tiles/staged/preview/confirmed lifecycle, corner snapping, edit/move/rotate logic |
-| `src/scripts/in_game_hud.gd` | HUD — mode buttons, speed controls, tool buttons, rename dialog, floor/speed indicators |
-| `src/scripts/camera_2d.gd` | Camera — WASD, QE rotate, RF floor, ZC zoom, text-focus guard, smoothing disabled |
-| `src/scripts/hud/building_edit_dialog.gd` | Reusable edit dialog for buildings and classrooms (add/delete, move/rotate, rename, demolish) |
-| `src/scripts/hud/building_rename_dialog.gd` | Popup Window for naming buildings/classrooms |
-| `src/scripts/hud/floating_confirm_widget.gd` | Confirm/Continue/Redrag floating bubble |
-| `src/scripts/blueprint_grid.gdshader` | Per-tile uniform white border shader |
-| `src/scenes/game_map.tscn` | Main scene — FieldLayer, RoadLayer, ClassroomLayer, BlueprintGridLayer, Camera2D, InGameHUD |
-| `src/scenes/InGameHUD.tscn` | Full HUD — ModeControlToolbar, DrawerPanel, MainHUDPanel, speed controls |
+| File | Lines | Purpose |
+|---|---|---|---|
+| `src/scripts/game_map.gd` | ~2228 | Main game map — placement, bulldozer, mode switching, building edit (move/rotate/add-delete), classroom placement/edit, labels, collision prevention, rotation math, door system |
+| `src/scripts/construction_state.gd` | 358 | Building plan state machine — drag/tiles/staged/preview/confirmed lifecycle, corner snapping, edit/move/rotate logic |
+| `src/scripts/in_game_hud.gd` | 868 | HUD — mode buttons, speed controls, tool buttons, rename dialog, floor/speed indicators |
+| `src/scripts/camera_2d.gd` | 106 | Camera — WASD, QE rotate, RF floor, ZC zoom, text-focus guard, smoothing disabled |
+| `src/scripts/hud/building_edit_dialog.gd` | 105 | Reusable edit dialog for buildings and classrooms (add/delete, move/rotate, rename, demolish) |
+| `src/scripts/hud/building_rename_dialog.gd` | 56 | Popup Window for naming buildings/classrooms |
+| `src/scripts/hud/floating_confirm_widget.gd` | 83 | Confirm/Continue/Redrag floating bubble |
+| `src/scripts/blueprint_grid.gdshader` | 29 | Per-tile uniform white border shader |
+| `src/scenes/game_map.tscn` | 297 nodes | Main scene — FieldLayer, RoadLayer, ClassroomLayer, BlueprintGridLayer, Camera2D, InGameHUD |
+| `src/scenes/InGameHUD.tscn` | 70 nodes | Full HUD — ModeControlToolbar, DrawerPanel, MainHUDPanel, speed controls |
+| `src/scripts/BuildingDatabase.gd` | 251 | Centralized item catalogue — includes `doors/entrance/Single Door` entry |
 
 ---
 
@@ -154,7 +179,8 @@ Classroom editing uses EDITING state with tile add/delete.
 | 1 | `ConfirmedContainer` | Permanent ColorRects after confirmation |
 | 1 | `ClassroomContainer` | Classroom edit preview rects |
 | 2 | `ClassroomLayer` | Mint green classroom tilemap tiles |
-| 3 | `BuildingLabelsContainer` | Building and classroom name labels (always visible) |
+| 3 | `DoorContainer` | Door symbol ColorRects (overlays on building/classroom tiles) |
+| 3 | `BuildingLabelsContainer` | Building, classroom, and door name labels (always visible) |
 
 ---
 
@@ -167,3 +193,28 @@ Classroom editing uses EDITING state with tile add/delete.
 - Camera zoom is clamped to `MAX_ZOOM = 3.0`; `_zoom_camera()` in `game_map.gd` clamps to 2.0 (unused code path — zoom is handled in `camera_2d.gd`).
 - Classroom rectangle fill may produce non-rectangular results if part of the drag area is blocked by existing classrooms — blocked cells are simply skipped.
 - Rotating a building with irregular shape may place classroom cells slightly outside the rotated building boundary; no post-rotation clamp is performed.
+- Door placement is validated for edge and parallel constraints but does not check that the building has at least one door or that every classroom has one (enforcement is manual).
+
+---
+
+## Project Statistics (2026-06-14)
+
+| Metric | Count |
+|---|---|
+| **Total .gd scripts** | 13 |
+| **Total script lines** | ~3996 |
+| **Total .tscn scenes** | 7 |
+| **Total scene nodes** (top-level) | ~431 |
+| **Key scenes** | game_map.tscn (297), InGameHUD.tscn (70), BuildingEditDialog.tscn (18), BuildingRenameDialog.tscn (9), FloatingConfirmWidget.tscn (11), ItemToolTip.tscn (6) |
+| **Most complex script** | `game_map.gd` — ~2228 lines, 52 functions, 300+ variable references |
+| **Git commits** (all-time) | 161 |
+| **Test files** | 0 (no test framework configured) |
+
+### File Size Distribution (top 5 .gd)
+| File | Lines |
+|---|---|
+| `game_map.gd` | 2228 |
+| `in_game_hud.gd` | 868 |
+| `construction_state.gd` | 358 |
+| `BuildingDatabase.gd` | 251 |
+| `camera_2d.gd` | 106 |

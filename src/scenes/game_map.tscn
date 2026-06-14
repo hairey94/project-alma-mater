@@ -64,6 +64,9 @@ tile_set = SubResource("TileSet_tw6lq")
 [node name="ClassroomLayer" type="TileMapLayer" parent="." unique_id=1287634512]
 tile_set = SubResource("TileSet_55amd")
 
+[node name="CorridorLayer" type="TileMapLayer" parent="." unique_id=1749365123]
+tile_set = SubResource("TileSet_55amd")
+
 [node name="BlueprintGridLayer" type="ColorRect" parent="." unique_id=1538020107]
 visible = false
 material = SubResource("ShaderMaterial_spb6t")
