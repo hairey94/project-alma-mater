@@ -215,6 +215,8 @@ func _on_drawer_sub_tab_changed(tab_index: int) -> void:
 	if raw == null:
 		return
 	var sub_key: String = str(raw)
+	current_sub_tab = sub_key
+	_populate_drawer_items(current_active_tab, sub_key)
 	if current_active_tab == "building" and sub_key == "block":
 		_auto_select_item("Campus block")
 
@@ -288,6 +290,14 @@ func _populate_drawer_items(category: String, sub: String) -> void:
 		btn.mouse_entered.connect(func(): is_mouse_over_ui = true)
 		btn.mouse_exited.connect(func(): is_mouse_over_ui = false)
 		services_grid.add_child(btn)
+	var game_map = find_parent("GameMap")
+	if not game_map:
+		game_map = get_tree().current_scene.find_child("GameMap", true, false)
+	if game_map and game_map.has_method("get_room_mgr") and game_map.get_room_mgr().has_principal_office():
+		for child in services_grid.get_children():
+			if child is Button and child.get_meta("item_name", "") == "Principal Office":
+				child.disabled = true
+				break
 	drawer_sub_tab_bar.get_parent().queue_sort()
 
 func _auto_select_item(item_name: String) -> void:
@@ -417,6 +427,12 @@ func _pause_btn_icon(paused: bool) -> void:
 
 func _get_blueprint_grid() -> ColorRect:
 	return get_node_or_null("../BlueprintGridLayer") as ColorRect
+
+func disable_principal_office_button(disabled: bool) -> void:
+	for child in services_grid.get_children():
+		if child is Button and child.get_meta("item_name", "") == "Principal Office":
+			child.disabled = disabled
+			break
 
 func _on_building_selected(item_name: String) -> void:
 	var game_map = find_parent("GameMap")
