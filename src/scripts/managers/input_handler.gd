@@ -32,7 +32,7 @@ func handle_input(event: InputEvent) -> void:
 		map.get_viewport().set_input_as_handled()
 
 func _handle_rotate_from_edit(event: InputEvent) -> void:
-	var cell = map._cell_under_mouse()
+	var cell = MapUtils.cell_under_mouse(map.field_layer)
 	if cell in map.construction.editing_cells:
 		var other_cells = map.building_mgr.get_all_cells_except(map.construction.editing_building_index)
 		var new_count = map._building_edit_rotation_count + 1
@@ -64,7 +64,7 @@ func _handle_rotate_from_edit(event: InputEvent) -> void:
 		if can_rotate:
 			map.construction.editing_cells = positioned
 			map._building_edit_rotation_count = new_count
-			map.construction.start_drag(map._corner_under_mouse())
+			map.construction.start_drag(MapUtils.corner_under_mouse(map.field_layer))
 		map.get_viewport().set_input_as_handled()
 
 func _handle_rotate_from_drag(event: InputEvent) -> void:
@@ -110,7 +110,7 @@ func _handle_right_click(event: InputEvent) -> void:
 		cs.current_state = ConstructionState.State.EDITING
 	elif cs.current_state == ConstructionState.State.EDITING:
 		if map._editing_action == "add_delete":
-			var cell = map._cell_under_mouse()
+			var cell = MapUtils.cell_under_mouse(map.field_layer)
 			var bounds = Rect2i(0, 0, 64, 64)
 			if bounds.has_point(cell) and cell in cs.editing_cells:
 				cs.remove_cell(cell)
@@ -118,7 +118,7 @@ func _handle_right_click(event: InputEvent) -> void:
 				map.get_viewport().set_input_as_handled()
 				return
 		if map._is_door_edit:
-			var cell = map._cell_under_mouse()
+			var cell = MapUtils.cell_under_mouse(map.field_layer)
 			var bounds = Rect2i(0, 0, 64, 64)
 			if bounds.has_point(cell):
 				map._close_edit_dialog()
@@ -129,18 +129,18 @@ func _handle_right_click(event: InputEvent) -> void:
 		cs.painted_preview_cells.clear()
 		cs.render_preview()
 	elif cs.current_state == ConstructionState.State.PENDING_APPROVAL:
-		var cell = map._cell_under_mouse()
+		var cell = MapUtils.cell_under_mouse(map.field_layer)
 		cs.remove_cell(cell)
-		if map._classroom_placement_building_index >= 0:
+		if map._room_placement_building_index >= 0:
 			map.classroom_layer.erase_cell(cell)
 		if map.corridor_mgr.is_item(map.construction.active_item_name):
 			map.corridor_layer.erase_cell(cell)
 		if cs.current_state == ConstructionState.State.IDLE:
 			map._remove_confirmation_widget()
 	elif cs.current_state == ConstructionState.State.DRAGGING and cs.current_tool == "tiles":
-		var cell = map._cell_under_mouse()
+		var cell = MapUtils.cell_under_mouse(map.field_layer)
 		cs.remove_cell(cell)
-		if map._classroom_placement_building_index >= 0:
+		if map._room_placement_building_index >= 0:
 			map.classroom_layer.erase_cell(cell)
 		if map.corridor_mgr.is_item(map.construction.active_item_name):
 			map.corridor_layer.erase_cell(cell)
@@ -151,14 +151,14 @@ func _handle_right_click(event: InputEvent) -> void:
 			_deselect_tool()
 			return
 		if map.construction.active_item_name == "":
-			var cell = map._cell_under_mouse()
+			var cell = MapUtils.cell_under_mouse(map.field_layer)
 			var b_idx = map.building_mgr.get_at_cell(cell)
 			if b_idx >= 0:
 				map._start_building_edit(b_idx)
 				map.get_viewport().set_input_as_handled()
 				return
 		_deselect_tool()
-	map._is_bulldozing = false
+	map.bulldozer.deactivate()
 
 func _deselect_tool() -> void:
 	map.set_active_placement_item("")
@@ -170,7 +170,6 @@ func _deselect_tool() -> void:
 	map.construction.painted_preview_cells.clear()
 	map.construction.blocked_cells.clear()
 	map.construction.clear_preview_cells()
-	var hud = map.find_child("InGameHUD", true, false)
-	if hud and hud.has_method("deselect_toolbar"):
-		hud.deselect_toolbar()
+	if map._hud and map._hud.has_method("deselect_toolbar"):
+		map._hud.deselect_toolbar()
 	map.hud_message("Tool deselected")

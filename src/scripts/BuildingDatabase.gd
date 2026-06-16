@@ -261,6 +261,9 @@ const BUILDING_DATABASE = {
 	}
 }
 
+static func is_room_type(item_name: String) -> bool:
+	return item_name in ["Classroom", "Male Student Washroom", "Female Student Washroom", "Administration Area", "Principal Office", "Cafeteria"]
+
 ## Helper method allowing any map node script to check item pricing globally
 func get_item_cost(category: String, subcategory: String, item_name: String) -> int:
 	if BUILDING_DATABASE.has(category) and BUILDING_DATABASE[category].has(subcategory):

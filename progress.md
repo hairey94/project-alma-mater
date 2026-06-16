@@ -86,6 +86,10 @@ Corridor defaults to "tiles" tool (rectangular drag) instead of freeform.
 
 1—36. *(previous items 1–36 — see archived notes)*
 
+... [keep existing 37-72] ...
+
+73. **Student Spawning & Pathfinding** — Implemented a comprehensive student agent system. Students spawn from the left/right edges of the road layer (y=64, 65). Pathfinding prevents walking through walls by defining a strict "walkable" set comprising only roads, corridors, doors, and the specific start/target rooms. This ensures students must use doors to enter/exit rooms.
+
 37. **Classroom Placement System** — Players can select a "Classroom" tool from the toolbar, click inside a building, and drag to fill a **solid rectangle** (closed room shape). Classroom tiles render in mint green on `ClassroomLayer` (z=2). Placement respects building boundaries and doesn't overlap existing classrooms or other buildings.
 
 38. **Classroom Tile Preview During Drag** — While dragging to place a classroom, mint-green tiles appear on `ClassroomLayer` in real-time. Cells outside the building or blocked by existing classrooms are excluded from the rectangle fill.

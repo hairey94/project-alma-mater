@@ -41,6 +41,13 @@ static func rotate_edge_normal(normal: Vector2i, count: int) -> Vector2i:
 
 const TILE_SIZE = 64
 
+static func cell_under_mouse(layer: TileMapLayer) -> Vector2i:
+	return layer.local_to_map(layer.get_local_mouse_position())
+
+static func corner_under_mouse(layer: TileMapLayer) -> Vector2i:
+	var local_pos = layer.get_local_mouse_position()
+	return Vector2i(roundi(local_pos.x / TILE_SIZE), roundi(local_pos.y / TILE_SIZE))
+
 static func position_label(label: Label, cells: Array[Vector2i], offset_y: float = 0.0) -> void:
 	var centroid = calc_centroid(cells)
 	var world_pos = centroid * TILE_SIZE + Vector2(TILE_SIZE / 2, TILE_SIZE / 2)

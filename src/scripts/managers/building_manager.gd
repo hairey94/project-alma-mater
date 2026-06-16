@@ -63,5 +63,11 @@ func update_label_position(index: int) -> void:
 		if label:
 			MapUtils.position_label(label, b.cells, 0.0)
 
+func switch_mode(mode: int, field_layer: TileMapLayer) -> void:
+	var atlas_coord = Vector2i(3, 0) if mode == GlobalTransferData.GameMode.GAME else Vector2i(1, 0)
+	for b in data:
+		for cell in b.cells:
+			field_layer.set_cell(cell, 0, atlas_coord)
+
 func size() -> int:
 	return data.size()

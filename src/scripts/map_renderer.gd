@@ -13,8 +13,10 @@ var field_layer: TileMapLayer
 var building_manager = null
 var room_manager = null
 var corridor_manager = null
+var confirmed_container: Node2D
+var room_container: Node2D
 
-func setup(grid: ColorRect, cam: Camera2D, edge: Node2D, hover: ColorRect, door_hover: ColorRect, field: TileMapLayer, bld_mgr, rm_mgr, corr_mgr) -> void:
+func setup(grid: ColorRect, cam: Camera2D, edge: Node2D, hover: ColorRect, door_hover: ColorRect, field: TileMapLayer, bld_mgr, rm_mgr, corr_mgr, confirmed: Node2D = null, room_cont: Node2D = null) -> void:
 	grid_layer = grid
 	camera_ref = cam
 	edge_container = edge
@@ -24,6 +26,8 @@ func setup(grid: ColorRect, cam: Camera2D, edge: Node2D, hover: ColorRect, door_
 	building_manager = bld_mgr
 	room_manager = rm_mgr
 	corridor_manager = corr_mgr
+	confirmed_container = confirmed
+	room_container = room_cont
 
 func sync_grid_shader() -> void:
 	if not grid_layer or not grid_layer.visible:
@@ -128,3 +132,42 @@ func clear_preview_container(preview: Node2D) -> void:
 	for child in preview.get_children():
 		preview.remove_child(child)
 		child.queue_free()
+
+func _make_tile_rect(cell: Vector2i, color: Color, parent: Node2D) -> void:
+	var rect = ColorRect.new()
+	rect.size = Vector2(TILE_SIZE, TILE_SIZE)
+	rect.position = Vector2(cell.x * TILE_SIZE, cell.y * TILE_SIZE)
+	rect.color = color
+	rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	parent.add_child(rect)
+
+func clear_container(container: Node2D) -> void:
+	for child in container.get_children():
+		container.remove_child(child)
+		child.queue_free()
+
+func draw_confirmed_building_cells(construction, is_room_edit: bool, is_corridor_edit: bool) -> void:
+	if not confirmed_container:
+		return
+	clear_container(confirmed_container)
+
+	for i in range(building_manager.size()):
+		var b = building_manager.get_entry(i)
+		var cells_to_show = b.cells
+		if not is_room_edit and not is_corridor_edit and construction.current_state == ConstructionState.State.EDITING and construction.editing_building_index == i:
+			cells_to_show = construction.editing_cells
+		for cell in cells_to_show:
+			var has_room = room_manager.get_at_cell(cell) >= 0
+			if GlobalTransferData.current_mode == GlobalTransferData.GameMode.ARCHITECTURAL and has_room:
+				continue
+			var color = Color("#94a3b8") if GlobalTransferData.current_mode == GlobalTransferData.GameMode.ARCHITECTURAL else ConstructionState.CONFIRMED_COLOR
+			_make_tile_rect(cell, color, confirmed_container)
+
+func draw_room_edit_preview(construction, is_room_edit: bool, room_editing_index: int) -> void:
+	if not room_container:
+		return
+	clear_container(room_container)
+
+	if is_room_edit and construction.current_state == ConstructionState.State.EDITING and room_editing_index >= 0:
+		for cell in construction.editing_cells:
+			_make_tile_rect(cell, Color(0.3, 0.8, 0.3, 0.4), room_container)

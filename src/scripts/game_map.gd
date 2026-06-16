@@ -7,11 +7,11 @@ extends Node2D
 @onready var blueprint_grid_layer: ColorRect = $BlueprintGridLayer
 var principal_office_layer: TileMapLayer
 @onready var camera: Camera2D = $Camera2D
+@onready var _hud: CanvasLayer = find_child("InGameHUD", true, false)
 
 const GRID_SIZE = 64
 const TILE_SIZE = 64
 const FIELD_PX = GRID_SIZE * TILE_SIZE
-const BuildingEditDialog = preload("res://src/scripts/hud/building_edit_dialog.gd")
 const BuildingManager = preload("res://src/scripts/managers/building_manager.gd")
 const RoomManager = preload("res://src/scripts/managers/classroom_manager.gd")
 const CorridorManager = preload("res://src/scripts/managers/corridor_manager.gd")
@@ -19,6 +19,9 @@ const DoorManager = preload("res://src/scripts/managers/door_manager.gd")
 const MapRenderer = preload("res://src/scripts/map_renderer.gd")
 const InputHandler = preload("res://src/scripts/managers/input_handler.gd")
 const MapUtils = preload("res://src/scripts/managers/map_utils.gd")
+const EditController = preload("res://src/scripts/managers/edit_controller.gd")
+const Bulldozer = preload("res://src/scripts/managers/bulldozer.gd")
+const StudentManager = preload("res://src/scripts/managers/student_manager.gd")
 
 var plan_container: Node2D
 var confirmed_container: Node2D
@@ -29,8 +32,11 @@ var corridor_mgr
 var door_mgr
 var renderer
 var input_handler
+var edit_controller: EditController
+var bulldozer: Bulldozer
+var student_mgr: StudentManager
+var _student_container: Node2D
 
-var _building_edit_dialog
 var _building_labels_container: Node2D
 var _room_container: Node2D
 var _door_container: Node2D
@@ -38,9 +44,6 @@ var _door_placement_preview_node: Node2D
 var _edge_line_container: Node2D
 var _hover_rect: ColorRect
 var _door_hover_tile_rect: ColorRect
-
-var _is_bulldozing: bool = false
-var _last_bulldoze_cell: Vector2i = Vector2i(-1, -1)
 var _editing_action: String = ""
 var _building_edit_original_cells: Array[Vector2i] = []
 var _building_edit_room_entries: Array[Dictionary] = []
@@ -134,9 +137,24 @@ func _ready() -> void:
 	door_mgr = DoorManager.new()
 	door_mgr.setup(_door_container, _door_placement_preview_node, building_mgr, room_mgr)
 	renderer = MapRenderer.new()
-	renderer.setup(blueprint_grid_layer, camera, _edge_line_container, _hover_rect, _door_hover_tile_rect, field_layer, building_mgr, room_mgr, corridor_mgr)
+	renderer.setup(blueprint_grid_layer, camera, _edge_line_container, _hover_rect, _door_hover_tile_rect, field_layer, building_mgr, room_mgr, corridor_mgr, confirmed_container, _room_container)
+	edit_controller = EditController.new()
+	edit_controller.setup(self)
+	bulldozer = Bulldozer.new()
+	bulldozer.setup(self, field_layer, classroom_layer, principal_office_layer, corridor_layer, confirmed_container, building_mgr, room_mgr)
 	input_handler = InputHandler.new()
 	input_handler.setup(self)
+
+	_student_container = Node2D.new()
+	_student_container.name = "StudentContainer"
+	_student_container.z_index = 6
+	add_child(_student_container)
+
+	student_mgr = StudentManager.new()
+	student_mgr.setup(_student_container, corridor_mgr, door_mgr, room_mgr)
+	if GlobalSignalBus.minute_ticked.is_connected(student_mgr.on_minute_ticked):
+		GlobalSignalBus.minute_ticked.disconnect(student_mgr.on_minute_ticked)
+	GlobalSignalBus.minute_ticked.connect(student_mgr.on_minute_ticked)
 
 	_generate_map()
 	_center_camera_on_road()
@@ -146,9 +164,13 @@ func _ready() -> void:
 	blueprint_grid_layer.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	blueprint_grid_layer.visible = false
 
-	var hud = find_child("InGameHUD", true, false)
-	if hud and hud.has_signal("mode_changed"):
-		hud.mode_changed.connect(_on_game_mode_changed)
+	if _hud and _hud.has_signal("mode_changed"):
+		_hud.mode_changed.connect(_on_game_mode_changed)
+
+	_setup_test_spawn_button()
+
+	if GlobalTransferData.current_mode == GlobalTransferData.GameMode.GAME:
+		student_mgr.initialize_students()
 
 func _generate_map() -> void:
 	for x in range(GRID_SIZE):
@@ -164,11 +186,9 @@ func _center_camera_on_road() -> void:
 func _process(delta: float) -> void:
 	_update_hover_rect()
 	renderer.sync_grid_shader()
-	if _is_bulldozing:
-		var cell = _cell_under_mouse()
-		if cell != _last_bulldoze_cell:
-			_bulldoze_cell(cell)
-			_last_bulldoze_cell = cell
+	if bulldozer.is_active():
+		var cell = MapUtils.cell_under_mouse(field_layer)
+		bulldozer.bulldoze(cell)
 	if construction.active_item_name != "" or construction.current_state in [ConstructionState.State.EDITING, ConstructionState.State.DRAGGING]:
 		_process_construction_input()
 
@@ -270,11 +290,10 @@ func _update_hover_rect() -> void:
 		_clear_hover_door_preview()
 
 func _cell_under_mouse() -> Vector2i:
-	return field_layer.local_to_map(field_layer.get_local_mouse_position())
+	return MapUtils.cell_under_mouse(field_layer)
 
 func _corner_under_mouse() -> Vector2i:
-	var local_pos = field_layer.get_local_mouse_position()
-	return Vector2i(roundi(local_pos.x / TILE_SIZE), roundi(local_pos.y / TILE_SIZE))
+	return MapUtils.corner_under_mouse(field_layer)
 
 func _clear_hover_room_tile() -> void:
 	room_mgr.clear_hover_tile()
@@ -332,42 +351,24 @@ func cancel_placement() -> void:
 
 func _cancel_any_active_edit() -> void:
 	if construction.current_state == ConstructionState.State.EDITING:
-		if _is_door_edit:
-			_cancel_door_edit()
-		elif _is_corridor_edit:
-			_cancel_corridor_edit()
-		elif _is_room_edit:
-			_cancel_room_edit()
-		else:
-			_cancel_building_edit()
+		edit_controller.trigger_cancel()
 	elif construction.current_state in [ConstructionState.State.DRAGGING, ConstructionState.State.PENDING_APPROVAL]:
 		cancel_placement()
 
 func _on_game_mode_changed(new_mode: GlobalTransferData.GameMode) -> void:
-	_is_bulldozing = false
-	blueprint_grid_layer.visible = false
+	plan_container.z_index = 0
+	bulldozer.deactivate()
 	_cancel_any_active_edit()
 	room_mgr.clear_hover_tile()
 	corridor_mgr.clear_hover_tile()
 	_clear_hover_door_preview()
-	for i in range(building_mgr.size()):
-		var b = building_mgr.get_entry(i)
-		for cell in b.cells:
-			var atlas_coord = Vector2i(3, 0) if new_mode == GlobalTransferData.GameMode.GAME else Vector2i(1, 0)
-			field_layer.set_cell(cell, 0, atlas_coord)
-	if principal_office_layer:
-		principal_office_layer.clear()
-		for i in range(room_mgr.size()):
-			var cls = room_mgr.get_entry(i)
-			if cls.room_type == "Principal Office":
-				for cell in cls.cells:
-					classroom_layer.erase_cell(cell)
-	for i in range(room_mgr.size()):
-		var cls = room_mgr.get_entry(i)
-		var atlas = room_mgr.get_atlas_for_room(cls.room_type)
-		var redraw_layer = principal_office_layer if cls.room_type == "Principal Office" and principal_office_layer else classroom_layer
-		for cell in cls.cells:
-			redraw_layer.set_cell(cell, 0, atlas)
+
+	building_mgr.switch_mode(new_mode, field_layer)
+	room_mgr.switch_mode(new_mode, classroom_layer)
+
+	if new_mode != GlobalTransferData.GameMode.GAME:
+		student_mgr.despawn_all()
+
 	match new_mode:
 		GlobalTransferData.GameMode.GAME:
 			field_layer.modulate = Color.WHITE
@@ -375,6 +376,8 @@ func _on_game_mode_changed(new_mode: GlobalTransferData.GameMode) -> void:
 			corridor_layer.modulate = Color(0.75, 0.75, 0.75, 1.0)
 			construction.clear_staged(false)
 			confirmed_container.visible = false
+			blueprint_grid_layer.visible = false
+			student_mgr.initialize_students()
 		GlobalTransferData.GameMode.ARCHITECTURAL:
 			field_layer.modulate = Color("#3057e1")
 			classroom_layer.modulate = Color.WHITE
@@ -387,6 +390,7 @@ func _on_game_mode_changed(new_mode: GlobalTransferData.GameMode) -> void:
 			corridor_layer.modulate = Color(0.75, 0.75, 0.75, 1.0)
 			construction.clear_staged(false)
 			confirmed_container.visible = false
+			blueprint_grid_layer.visible = false
 		GlobalTransferData.GameMode.BULLDOZER:
 			field_layer.modulate = Color("#991b1b")
 			classroom_layer.modulate = Color.WHITE
@@ -395,6 +399,21 @@ func _on_game_mode_changed(new_mode: GlobalTransferData.GameMode) -> void:
 			confirmed_container.visible = false
 	if confirmed_container.visible:
 		_update_confirmed_visuals()
+
+func _setup_test_spawn_button() -> void:
+	var canvas = CanvasLayer.new()
+	canvas.name = "TestSpawnCanvas"
+	canvas.layer = 10
+	add_child(canvas)
+	var btn = Button.new()
+	btn.name = "TestSpawnBtn"
+	btn.text = "Spawn Students"
+	btn.position = Vector2(10, 100)
+	btn.size = Vector2(140, 32)
+	btn.pressed.connect(func():
+		student_mgr.initialize_students()
+	)
+	canvas.add_child(btn)
 
 func _input(event: InputEvent) -> void:
 	input_handler.handle_input(event)
@@ -405,11 +424,10 @@ func _unhandled_input(event: InputEvent) -> void:
 			if event.button_index == MOUSE_BUTTON_LEFT:
 				var cell = _cell_under_mouse()
 				if event.pressed:
-					_bulldoze_cell(cell)
-					_last_bulldoze_cell = cell
-					_is_bulldozing = true
+					bulldozer.bulldoze(cell)
+					bulldozer.activate()
 				else:
-					_is_bulldozing = false
+					bulldozer.deactivate()
 			return
 
 		if GlobalTransferData.current_mode != GlobalTransferData.GameMode.ARCHITECTURAL:
@@ -768,14 +786,12 @@ func _confirm_room_placement() -> void:
 		construction.current_state = ConstructionState.State.IDLE
 		_remove_confirmation_widget()
 		_room_placement_building_index = -1
-		var hud = find_child("InGameHUD", true, false) as CanvasLayer
-		if hud and hud.has_method("disable_principal_office_button"):
-			hud.disable_principal_office_button(true)
+		if _hud and _hud.has_method("disable_principal_office_button"):
+			_hud.disable_principal_office_button(true)
 		return
 	room_mgr.increment_counter(room_type)
-	var hud = find_child("InGameHUD", true, false) as CanvasLayer
-	if hud and hud.has_method("show_building_rename_dialog"):
-		hud.show_building_rename_dialog(default_name, func(confirmed: bool, name: String):
+	if _hud and _hud.has_method("show_building_rename_dialog"):
+		_hud.show_building_rename_dialog(default_name, func(confirmed: bool, name: String):
 			if not confirmed:
 				return
 			var cells = construction.staged_cells.duplicate()
@@ -797,7 +813,8 @@ func _add_room_label(name: String, cells: Array[Vector2i], building_idx: int, ro
 	var label = _create_room_label(name)
 	var offset_y = 36 if room_type == "Principal Office" else -36
 	MapUtils.position_label(label, cells, offset_y)
-	room_mgr.add(name, cells, building_idx, room_type, label)
+	var room_idx = room_mgr.add(name, cells, building_idx, room_type, label)
+	RoomRegistry.register_room(room_type, cells, name, building_idx, room_idx)
 
 func _create_room_label(name: String) -> Label:
 	var label = Label.new()
@@ -834,9 +851,8 @@ func confirm_staged_placement() -> void:
 	var default_name = "Building %d" % building_mgr.counter
 	var current_floor = camera.current_floor
 	var atlas = building_mgr.atlas_coord()
-	var hud = find_child("InGameHUD", true, false) as CanvasLayer
-	if hud and hud.has_method("show_building_rename_dialog"):
-		hud.show_building_rename_dialog(default_name, func(confirmed: bool, name: String):
+	if _hud and _hud.has_method("show_building_rename_dialog"):
+		_hud.show_building_rename_dialog(default_name, func(confirmed: bool, name: String):
 			if not confirmed:
 				return
 			var cells = construction.staged_cells.duplicate()
@@ -862,17 +878,15 @@ func redrag_staged_placement() -> void:
 	_remove_confirmation_widget()
 
 func _spawn_confirmation_widget(spawn_pos: Vector2) -> void:
-	var hud = find_child("InGameHUD", true, false) as CanvasLayer
-	if hud and hud.has_method("display_floating_approval_bubble"):
-		hud.display_floating_approval_bubble(spawn_pos, self)
+	if _hud and _hud.has_method("display_floating_approval_bubble"):
+		_hud.display_floating_approval_bubble(spawn_pos, self)
 
 func _remove_confirmation_widget() -> void:
-	var hud = find_child("InGameHUD", true, false) as CanvasLayer
-	if hud and hud.has_method("dismiss_floating_approval_bubble"):
-		hud.dismiss_floating_approval_bubble()
+	if _hud and _hud.has_method("dismiss_floating_approval_bubble"):
+		_hud.dismiss_floating_approval_bubble()
 
 func _is_room_item(item_name: String) -> bool:
-	return item_name == "Classroom" or item_name == "Male Student Washroom" or item_name == "Female Student Washroom" or item_name == "Administration Area" or item_name == "Principal Office" or item_name == "Cafeteria"
+	return BuildingDatabase.is_room_type(item_name)
 
 func _is_door_item(item_name: String) -> bool:
 	return door_mgr.is_item(item_name)
@@ -901,20 +915,18 @@ func start_door_placement(cell: Vector2i) -> void:
 	hud_message("Placed %s" % name)
 
 func _start_door_edit(index: int) -> void:
-	_close_edit_dialog()
-	var door = door_mgr
 	_is_door_edit = true
 	_door_editing_index = index
-	_building_edit_dialog = BuildingEditDialog.new()
-	_building_edit_dialog.show(
-		self,
-		door.get_entry(index).name,
-		_on_door_edit_action,
-		_confirm_door_edit,
-		_cancel_door_edit,
-		"door"
-	)
-	hud_message("Editing %s" % door.get_entry(index).name)
+	var door_name = door_mgr.get_entry(index).name
+	edit_controller.start_edit("door", index, door_name, {
+		"add_delete": func(): _on_door_edit_action("add_delete"),
+		"move_rotate": func(): _on_door_edit_action("move_rotate"),
+		"rename": _rename_door,
+		"demolish": _demolish_door,
+		"confirm": _confirm_door_edit,
+		"cancel": _cancel_door_edit
+	})
+	hud_message("Editing %s" % door_name)
 
 func _on_door_edit_action(action: String) -> void:
 	match action:
@@ -925,10 +937,6 @@ func _on_door_edit_action(action: String) -> void:
 			construction.current_tool = "tiles"
 			construction.render_preview()
 			hud_message("Click a valid edge tile to move the door, middle-click to toggle direction")
-		"rename":
-			_rename_door()
-		"demolish":
-			_demolish_door()
 
 func _confirm_door_edit() -> void:
 	_editing_action = ""
@@ -956,9 +964,8 @@ func _rename_door() -> void:
 	if idx < 0 or idx >= door_mgr.size():
 		return
 	var door = door_mgr.get_entry(idx)
-	var hud = find_child("InGameHUD", true, false) as CanvasLayer
-	if hud and hud.has_method("show_building_rename_dialog"):
-		hud.show_building_rename_dialog(door.name, func(confirmed: bool, new_name: String):
+	if _hud and _hud.has_method("show_building_rename_dialog"):
+		_hud.show_building_rename_dialog(door.name, func(confirmed: bool, new_name: String):
 			if not confirmed:
 				return
 			door_mgr.rename(idx, new_name)
@@ -1002,36 +1009,6 @@ func _relocate_door_to(cell: Vector2i) -> void:
 	_update_confirmed_visuals()
 	_reset_door_replacement_state()
 
-func _bulldoze_cell(cell: Vector2i) -> void:
-	if cell.x < 0 or cell.x >= GRID_SIZE or cell.y < 0 or cell.y >= GRID_SIZE + 2:
-		return
-	for i in range(room_mgr.size() - 1, -1, -1):
-		var cls = room_mgr.get_entry(i)
-		var idx = cls.cells.find(cell)
-		if idx >= 0:
-			var erase_layer = principal_office_layer if cls.room_type == "Principal Office" and principal_office_layer else classroom_layer
-			erase_layer.erase_cell(cell)
-			cls.cells.remove_at(idx)
-			if cls.cells.is_empty():
-				cls.label.queue_free()
-				room_mgr.remove(i)
-			return
-	field_layer.set_cell(cell, 0, Vector2i(0, 0))
-	for child in confirmed_container.get_children():
-		var rect := child as ColorRect
-		if rect and rect.position == Vector2(cell.x * TILE_SIZE, cell.y * TILE_SIZE):
-			confirmed_container.remove_child(rect)
-			rect.queue_free()
-	for i in range(building_mgr.size() - 1, -1, -1):
-		var b = building_mgr.get_entry(i)
-		var idx = b.cells.find(cell)
-		if idx >= 0:
-			b.cells.remove_at(idx)
-			if b.cells.is_empty():
-				b.label.queue_free()
-				building_mgr.remove(i)
-			break
-
 func _start_building_edit(index: int) -> void:
 	_close_edit_dialog()
 	var b = building_mgr.get_entry(index)
@@ -1053,14 +1030,14 @@ func _start_building_edit(index: int) -> void:
 	_corridor_editing_index = -1
 	_update_confirmed_visuals()
 
-	_building_edit_dialog = BuildingEditDialog.new()
-	_building_edit_dialog.show(
-		self,
-		b.name,
-		_on_edit_action,
-		_confirm_building_edit,
-		_cancel_building_edit
-	)
+	edit_controller.start_edit("building", index, b.name, {
+		"add_delete": func(): _on_edit_action("add_delete"),
+		"move_rotate": func(): _on_edit_action("move_rotate"),
+		"rename": _rename_building,
+		"demolish": _demolish_building,
+		"confirm": _confirm_building_edit,
+		"cancel": _cancel_building_edit
+	})
 	hud_message("Editing %s" % b.name)
 
 func _on_edit_action(action: String) -> void:
@@ -1082,21 +1059,17 @@ func _on_edit_action(action: String) -> void:
 			_building_edit_rotation_count = 0
 			_building_edit_translation = Vector2i.ZERO
 			construction.current_tool = "move_rotate"
+			plan_container.z_index = 2
 			construction.render_preview()
 			hud_message("Left-click & drag to move, middle-click to rotate.")
-		"rename":
-			_rename_building()
-		"demolish":
-			_demolish_building()
 
 func _rename_building() -> void:
 	var idx = construction.editing_building_index
 	if idx < 0 or idx >= building_mgr.size():
 		return
 	var b = building_mgr.get_entry(idx)
-	var hud = find_child("InGameHUD", true, false) as CanvasLayer
-	if hud and hud.has_method("show_building_rename_dialog"):
-		hud.show_building_rename_dialog(b.name, func(confirmed: bool, new_name: String):
+	if _hud and _hud.has_method("show_building_rename_dialog"):
+		_hud.show_building_rename_dialog(b.name, func(confirmed: bool, new_name: String):
 			if not confirmed:
 				return
 			building_mgr.rename(idx, new_name)
@@ -1121,6 +1094,7 @@ func _do_demolish(idx: int) -> void:
 	while i < room_mgr.size():
 		var cls = room_mgr.get_entry(i)
 		if cls.building_index == idx:
+			RoomRegistry.unregister_room(i, cls.room_type)
 			cls.label.queue_free()
 			room_mgr.clear_tiles(cls.cells, cls.room_type)
 			room_mgr.remove(i)
@@ -1146,6 +1120,7 @@ func _do_demolish(idx: int) -> void:
 	_update_confirmed_visuals()
 
 func _confirm_building_edit() -> void:
+	plan_container.z_index = 0
 	_editing_action = ""
 	construction.blocked_cells.clear()
 	if construction.editing_building_index == -1:
@@ -1192,6 +1167,7 @@ func _confirm_building_edit() -> void:
 	_close_edit_dialog()
 
 func _cancel_building_edit() -> void:
+	plan_container.z_index = 0
 	_editing_action = ""
 	construction.blocked_cells.clear()
 	_clear_building_edit_preview_tiles()
@@ -1269,17 +1245,17 @@ func _start_room_edit(index: int) -> void:
 	_editing_action = ""
 	_update_confirmed_visuals()
 
-	_building_edit_dialog = BuildingEditDialog.new()
 	var edit_title = room_mgr.edit_title(room_type)
 	if room_type != "Principal Office":
 		edit_title += " #" + str(index + 1)
-	_building_edit_dialog.show(
-		self,
-		edit_title,
-		_on_room_edit_action,
-		_confirm_room_edit,
-		_cancel_room_edit
-	)
+	edit_controller.start_edit("room", index, edit_title, {
+		"add_delete": func(): _on_room_edit_action("add_delete"),
+		"move_rotate": func(): _on_room_edit_action("move_rotate"),
+		"rename": _rename_room,
+		"demolish": _demolish_room,
+		"confirm": _confirm_room_edit,
+		"cancel": _cancel_room_edit
+	})
 	hud_message("Editing %s" % cls.name)
 
 func _on_room_edit_action(action: String) -> void:
@@ -1302,12 +1278,9 @@ func _on_room_edit_action(action: String) -> void:
 			_building_edit_rotation_count = 0
 			_building_edit_translation = Vector2i.ZERO
 			construction.current_tool = "move_rotate"
+			plan_container.z_index = 2
 			construction.render_preview()
 			hud_message("Left-click & drag to move, middle-click to rotate.")
-		"rename":
-			_rename_room()
-		"demolish":
-			_demolish_room()
 
 func _rename_room() -> void:
 	var idx = _room_editing_index
@@ -1316,9 +1289,8 @@ func _rename_room() -> void:
 	var cls = room_mgr.get_entry(idx)
 	if cls.room_type == "Principal Office":
 		return
-	var hud = find_child("InGameHUD", true, false) as CanvasLayer
-	if hud and hud.has_method("show_building_rename_dialog"):
-		hud.show_building_rename_dialog(cls.name, func(confirmed: bool, new_name: String):
+	if _hud and _hud.has_method("show_building_rename_dialog"):
+		_hud.show_building_rename_dialog(cls.name, func(confirmed: bool, new_name: String):
 			if not confirmed:
 				return
 			room_mgr.rename(idx, new_name)
@@ -1336,6 +1308,20 @@ func _do_demolish_room(idx: int) -> void:
 		return
 	var cls = room_mgr.get_entry(idx)
 	var was_principal = cls.room_type == "Principal Office"
+	var original_idx = idx
+
+	if cls.room_type == "Administration Area" and not was_principal:
+		var i = 0
+		while i < room_mgr.size():
+			var r = room_mgr.get_entry(i)
+			if r.room_type == "Principal Office" and r.building_index == cls.building_index and i != idx:
+				_do_demolish_room(i)
+				if i < idx:
+					idx -= 1
+				break
+			i += 1
+
+	RoomRegistry.unregister_room(original_idx, cls.room_type)
 	door_mgr.remove_for_room(idx, cls.building_index)
 	cls.label.queue_free()
 	room_mgr.clear_tiles(cls.cells, cls.room_type)
@@ -1344,15 +1330,15 @@ func _do_demolish_room(idx: int) -> void:
 	construction.cancel_edit()
 	_is_room_edit = false
 	if was_principal:
-		var hud = find_child("InGameHUD", true, false) as CanvasLayer
-		if hud and hud.has_method("disable_principal_office_button"):
-			hud.disable_principal_office_button(false)
+		if _hud and _hud.has_method("disable_principal_office_button"):
+			_hud.disable_principal_office_button(false)
 	_room_editing_index = -1
 	_close_edit_dialog()
 	renderer.update_edge_lines()
 	_update_confirmed_visuals()
 
 func _confirm_room_edit() -> void:
+	plan_container.z_index = 0
 	_editing_action = ""
 	construction.blocked_cells.clear()
 	if _room_editing_index < 0 or _room_editing_index >= room_mgr.size():
@@ -1404,6 +1390,7 @@ func _confirm_room_edit() -> void:
 	_close_edit_dialog()
 
 func _cancel_room_edit() -> void:
+	plan_container.z_index = 0
 	_editing_action = ""
 	construction.blocked_cells.clear()
 	construction.cancel_edit()
@@ -1438,6 +1425,7 @@ func _confirm_corridor_placement() -> void:
 	corridor_mgr.counter += 1
 	var name = "Corridor #%d" % corridor_mgr.counter
 	corridor_mgr.add(name, filtered, building_idx)
+	corridor_mgr.clear_hover_tile()
 	construction.staged_cells.clear()
 	construction.current_state = ConstructionState.State.IDLE
 	_remove_confirmation_widget()
@@ -1445,27 +1433,23 @@ func _confirm_corridor_placement() -> void:
 	hud_message("Placed %s" % name)
 
 func _start_corridor_edit(index: int) -> void:
-	_close_edit_dialog()
 	var corr = corridor_mgr.get_entry(index)
 	_is_room_edit = false
 	_room_editing_index = -1
 	_is_corridor_edit = true
 	_corridor_editing_index = index
-	_building_edit_dialog = BuildingEditDialog.new()
-	_building_edit_dialog.show(
-		self,
-		corr.name,
-		_on_corridor_edit_action,
-		_confirm_corridor_edit,
-		_cancel_corridor_edit,
-		"corridor"
-	)
 	construction.begin_edit(corr.building_index, corr.cells)
 	_building_edit_original_cells = corr.cells.duplicate()
 	_building_edit_rotation_count = 0
 	_building_edit_translation = Vector2i.ZERO
 	_editing_action = ""
 	_update_confirmed_visuals()
+	edit_controller.start_edit("corridor", index, corr.name, {
+		"add_delete": func(): _on_corridor_edit_action("add_delete"),
+		"demolish": _demolish_corridor,
+		"confirm": _confirm_corridor_edit,
+		"cancel": _cancel_corridor_edit
+	})
 	hud_message("Editing %s" % corr.name)
 
 func _on_corridor_edit_action(action: String) -> void:
@@ -1476,8 +1460,6 @@ func _on_corridor_edit_action(action: String) -> void:
 			construction.blocked_cells = corridor_mgr.get_blocked_cells(_corridor_editing_index, camera.current_floor)
 			construction.render_preview()
 			hud_message("Click to add tiles, right-click to remove")
-		"demolish":
-			_demolish_corridor()
 
 func _confirm_corridor_edit() -> void:
 	_editing_action = ""
@@ -1541,28 +1523,8 @@ func _do_demolish_corridor(idx: int) -> void:
 	hud_message("Corridor removed")
 
 func _update_confirmed_visuals() -> void:
-	for child in confirmed_container.get_children():
-		child.queue_free()
-	for child in _room_container.get_children():
-		child.queue_free()
-
-	for i in range(building_mgr.size()):
-		var b = building_mgr.get_entry(i)
-		var cells_to_show = b.cells
-		if not _is_room_edit and not _is_corridor_edit and construction.current_state == ConstructionState.State.EDITING and construction.editing_building_index == i:
-			cells_to_show = construction.editing_cells
-		for cell in cells_to_show:
-			var has_room = room_mgr.get_at_cell(cell) >= 0
-			if GlobalTransferData.current_mode == GlobalTransferData.GameMode.ARCHITECTURAL and has_room:
-				continue
-			var color = Color("#94a3b8") if GlobalTransferData.current_mode == GlobalTransferData.GameMode.ARCHITECTURAL else ConstructionState.CONFIRMED_COLOR
-			construction._make_tile_rect(cell, color, confirmed_container)
-
-	for i in range(room_mgr.size()):
-		var cls = room_mgr.get_entry(i)
-		if _is_room_edit and construction.current_state == ConstructionState.State.EDITING and _room_editing_index == i:
-			for cell in construction.editing_cells:
-				construction._make_tile_rect(cell, Color(0.3, 0.8, 0.3, 0.4), _room_container)
+	renderer.draw_confirmed_building_cells(construction, _is_room_edit, _is_corridor_edit)
+	renderer.draw_room_edit_preview(construction, _is_room_edit, _room_editing_index)
 	if _is_corridor_edit and construction.current_state == ConstructionState.State.EDITING and _corridor_editing_index >= 0:
 		for cell in _corridor_edit_overlay_cells:
 			corridor_layer.erase_cell(cell)
@@ -1572,10 +1534,8 @@ func _update_confirmed_visuals() -> void:
 	renderer.update_edge_lines()
 
 func hud_message(msg: String) -> void:
-	var hud = find_child("InGameHUD", true, false) as CanvasLayer
-	if hud and hud.has_method("show_hud_message"):
-		hud.show_hud_message(msg)
+	if _hud and _hud.has_method("show_hud_message"):
+		_hud.show_hud_message(msg)
 
 func _close_edit_dialog() -> void:
-	if _building_edit_dialog and is_instance_valid(_building_edit_dialog.window):
-		_building_edit_dialog.window.queue_free()
+	edit_controller.discard()

@@ -87,7 +87,7 @@ func update_hover_tile(cell: Vector2i) -> void:
 		_hover_tile_cell = cell
 
 func clear_hover_tile() -> void:
-	if _hover_tile_cell.x >= 0:
+	if _hover_tile_cell.x >= 0 and not is_cell_in_any(_hover_tile_cell):
 		corridor_layer.erase_cell(_hover_tile_cell)
 	_hover_tile_cell = Vector2i(-999, -999)
 

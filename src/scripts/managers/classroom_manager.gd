@@ -184,11 +184,24 @@ func update_hover_tile(cell: Vector2i, room_type: String) -> void:
 		_hover_tile_cell = cell
 
 func clear_hover_tile() -> void:
-	if _hover_tile_cell.x >= 0:
+	if _hover_tile_cell.x >= 0 and get_at_cell(_hover_tile_cell) < 0:
 		room_layer.erase_cell(_hover_tile_cell)
 		if _principal_office_layer:
 			_principal_office_layer.erase_cell(_hover_tile_cell)
 	_hover_tile_cell = Vector2i(-999, -999)
+
+func switch_mode(mode: int, classroom_layer: TileMapLayer) -> void:
+	if _principal_office_layer:
+		_principal_office_layer.clear()
+		for cls in data:
+			if cls.room_type == ROOM_TYPE_PRINCIPAL_OFFICE:
+				for cell in cls.cells:
+					classroom_layer.erase_cell(cell)
+	for cls in data:
+		var atlas = get_atlas_for_room(cls.room_type)
+		var redraw_layer = _principal_office_layer if cls.room_type == ROOM_TYPE_PRINCIPAL_OFFICE and _principal_office_layer else classroom_layer
+		for cell in cls.cells:
+			redraw_layer.set_cell(cell, 0, atlas)
 
 func remove_doors_for_room(door_manager, room_idx: int, building_idx: int) -> void:
 	if door_manager:
